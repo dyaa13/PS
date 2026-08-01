@@ -1,0 +1,31 @@
+Modular split verification
+==========================
+
+Original HTML lines: 10900
+CSS extracted: 181 lines
+JavaScript files: 24
+
+js/01-config.js: original lines 624-805 (182 lines)
+js/02-state-dom.js: original lines 806-940 (135 lines)
+js/03-utils.js: original lines 942-1255 (314 lines)
+js/generators/year7.js: original lines 1257-2257 (1001 lines)
+js/generators/year8-base.js: original lines 2258-2484 (227 lines)
+js/generators/year9.js: original lines 2485-4232 (1748 lines)
+js/generators/year8-focused.js: original lines 4233-4853 (621 lines)
+js/generators/shared-fdp.js: original lines 4854-5228 (375 lines)
+js/problem-solving/01-core.js: original lines 5229-5290 (62 lines)
+js/problem-solving/02-arithmetic-comparison.js: original lines 5291-5396 (106 lines)
+js/problem-solving/03-fractions.js: original lines 5397-5933 (537 lines)
+js/problem-solving/04-decimals-percentages.js: original lines 5934-6357 (424 lines)
+js/problem-solving/05-ratio-proportion.js: original lines 6358-7184 (827 lines)
+js/problem-solving/06-speed-work-rate.js: original lines 7185-8143 (959 lines)
+js/problem-solving/07-age-equations.js: original lines 8144-8516 (373 lines)
+js/problem-solving/08-geometry-sequences.js: original lines 8517-8738 (222 lines)
+js/problem-solving/09-statistics-logic-model.js: original lines 8739-8937 (199 lines)
+js/04-question-engine.js: original lines 8938-9298 (361 lines)
+js/05-progress-storage.js: original lines 9299-9396 (98 lines)
+js/06-audio-effects.js: original lines 9397-9484 (88 lines)
+js/07-ui-gameplay.js: original lines 9485-9950 (466 lines)
+js/08-student-cloud-records.js: original lines 9951-10331 (381 lines)
+js/09-game-review.js: original lines 10332-10693 (362 lines)
+js/10-events-init.js: original lines 10694-10896 (203 lines)

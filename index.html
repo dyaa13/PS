@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="dyaa-edition" content="Problem Solving — Three Levels">
+<title>DYAA Problem Solving — Three Levels</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<section
+  class="student-identity-overlay"
+  id="studentIdentityOverlay"
+  aria-modal="true"
+  role="dialog"
+  aria-labelledby="studentIdentityTitle"
+>
+  <div class="student-identity-card">
+    <div class="student-identity-logo">🚀</div>
+    <h1 id="studentIdentityTitle">Welcome to DYAA</h1>
+    <p>
+      Enter your real name before starting. Your practice result will be sent
+      to your teacher's Results sheet.
+    </p>
+
+    <label class="student-name-label" for="studentNameInput">
+      Student name
+    </label>
+    <input
+      class="student-name-input"
+      id="studentNameInput"
+      type="text"
+      maxlength="40"
+      autocomplete="name"
+      placeholder="Enter your full name"
+    >
+
+    <div
+      class="student-name-error"
+      id="studentNameError"
+      aria-live="polite"
+    ></div>
+
+    <button
+      class="student-continue-btn"
+      id="continueStudentBtn"
+      type="button"
+    >
+      Continue to Practice
+    </button>
+  </div>
+</section>
+
+<main class="game-shell">
+  <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand-row">
+      <span class="brand-badge"></span>
+      <span class="brand">DYAA</span>
+      <span class="game-title" id="gameTitle">Problem Solving — Beginner</span>
+    </div>
+
+    <div class="topbar-right">
+      <div class="top-stat">
+        👤 <span id="studentNameDisplay">Student</span>
+      </div>
+      <button class="change-student-btn" id="changeStudentBtn" type="button">
+        Change Student
+      </button>
+      <div class="top-stat">⭐ <span id="totalStars">0</span></div>
+      <button class="sound-btn" id="soundBtn" type="button" aria-pressed="true">
+        🔊 Sound On
+      </button>
+    </div>
+  </header>
+
+  <section class="content">
+    <div class="setup">
+      <div class="control">
+        <label for="yearSelect">Problem Level</label>
+        <select id="yearSelect">
+          <option value="7" selected>Beginner</option>
+          <option value="8">Intermediate</option>
+          <option value="9">Advanced</option>
+        </select>
+      </div>
+
+      <div class="control skill-control">
+        <label id="skillLabel">Problem Types</label>
+        <details class="skill-picker" id="skillPicker">
+          <summary id="skillPickerSummary">All skills selected</summary>
+          <div class="skill-panel">
+            <div class="skill-actions">
+              <button class="skill-action-btn" id="selectAllSkillsBtn" type="button">
+                Select All
+              </button>
+              <button class="skill-action-btn" id="clearSkillsBtn" type="button">
+                Clear
+              </button>
+              <button class="skill-action-btn skill-done-btn" id="doneSkillsBtn" type="button">
+                Done
+              </button>
+            </div>
+            <div class="skill-checkboxes" id="skillCheckboxes"></div>
+            <div class="skill-selection-help" id="skillSelectionHelp">
+              Select one or more skills. Questions will be mixed only from your selection.
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="control">
+        <label for="levelSelect">Question Structure</label>
+        <select id="levelSelect"></select>
+      </div>
+
+      <div class="control">
+        <label for="timeSelect">Practice Length</label>
+        <select id="timeSelect">
+          <option value="900" selected>15 Minutes</option>
+          <option value="1800">30 Minutes</option>
+          <option value="2700">45 Minutes</option>
+          <option value="3600">60 Minutes</option>
+        </select>
+      </div>
+
+      <div class="control">
+        <label for="heroSelect">Choose Your Hero</label>
+        <select id="heroSelect">
+          <option value="fox">🦊 Number Fox</option>
+          <option value="robot">🤖 Maths Robot</option>
+          <option value="dragon">🐉 Number Dragon</option>
+          <option value="ranger">🚀 Space Ranger</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="primary-btn" id="startBtn" type="button">
+        Start 15-Minute Beginner Practice
+      </button>
+
+      <button class="review-btn" id="reviewSavedBtn" type="button">
+        Review Saved Mistakes (<span id="savedCountTop">0</span>)
+      </button>
+
+      <button class="test-btn" id="testQuestionsBtn" type="button">
+        Test 100 Questions
+      </button>
+
+      <button class="secondary-btn" id="viewRecordsBtn" type="button">
+        Practice Records (<span id="practiceRecordCount">0</span>)
+      </button>
+
+      <button class="secondary-btn hidden" id="pauseBtn" type="button">
+        Pause
+      </button>
+
+      <button class="danger-btn hidden" id="finishBtn" type="button">
+        Finish Early
+      </button>
+    </div>
+
+    <section class="test-panel" id="testPanel" aria-live="polite">
+      <div class="test-panel-header">
+        <div>
+          <h2>100-Question Generator Check</h2>
+          <div class="test-scope" id="testScope">
+            Tests the currently selected year, skill and difficulty.
+          </div>
+        </div>
+        <button class="test-close" id="closeTestBtn" type="button">Close</button>
+      </div>
+
+      <div class="test-result-grid">
+        <div class="test-result-card"><span>Valid questions</span><b id="testValidValue">—</b></div>
+        <div class="test-result-card"><span>Unique questions</span><b id="testUniqueValue">—</b></div>
+        <div class="test-result-card"><span>Recent repeats</span><b id="testRepeatValue">—</b></div>
+        <div class="test-result-card"><span>Issues</span><b id="testIssueValue">—</b></div>
+      </div>
+
+      <div class="test-message" id="testMessage">
+        Press “Test 100 Questions” to check the current selection.
+      </div>
+      <div class="test-breakdown" id="testBreakdown"></div>
+      <ul class="test-issues" id="testIssues"></ul>
+    </section>
+
+    <section class="dashboard">
+      <div class="panel hero-panel">
+        <div class="hero-avatar" id="heroAvatar">🦊</div>
+        <div>
+          <div class="panel-title">Your Hero</div>
+          <div class="hero-name" id="heroName">Number Fox</div>
+          <div class="small-text" id="heroLevel">Year 7 Level 1</div>
+          <div class="mini-track">
+            <div class="mini-bar" id="heroBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel mission-panel">
+        <div class="panel-title">Practice Mission</div>
+        <div class="mission-text" id="missionText">
+          Start a practice session to receive a mission.
+        </div>
+        <div class="small-text" id="missionStatus">
+          Mission reward: +5 stars
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title" id="progressTitle">Year 7 Progress</div>
+        <div class="progress-value">
+          Best: <span id="bestScoreValue">0</span>
+        </div>
+        <div class="progress-sub">
+          Saved mistakes: <span id="savedCountPanel">0</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="raceway">
+      <div class="race-line"></div>
+      <div class="race-progress" id="raceProgress"></div>
+      <div class="rocket" id="rocket">🚀</div>
+      <div class="finish-flag">🏁</div>
+    </div>
+
+    <section class="status-grid">
+      <div class="status-card timer-card" id="timerCard">
+        <div class="status-label">Time</div>
+        <div class="status-value" id="timerValue">15:00</div>
+      </div>
+
+      <div class="status-card">
+        <div class="status-label">Score</div>
+        <div class="status-value" id="scoreValue">0</div>
+      </div>
+
+      <div class="status-card">
+        <div class="status-label">Correct</div>
+        <div class="status-value" id="correctValue">0</div>
+      </div>
+
+      <div class="status-card">
+        <div class="status-label">Answered</div>
+        <div class="status-value" id="answeredValue">0</div>
+      </div>
+
+      <div class="status-card" id="streakCard">
+        <div class="status-label">Streak</div>
+        <div class="status-value" id="streakValue">0</div>
+      </div>
+
+      <div class="status-card">
+        <div class="status-label">Accuracy</div>
+        <div class="status-value" id="accuracyValue">—</div>
+      </div>
+    </section>
+
+    <section class="play-area" id="playArea">
+      <div class="reward-toast" id="rewardToast" aria-live="polite"></div>
+
+      <div class="question-zone">
+        <div class="mode-badge" id="modeBadge">Ready</div>
+        <div class="streak-banner" id="streakBanner"></div>
+        <div class="question" id="questionText">
+          Press “Start 15-Minute Beginner Practice”
+        </div>
+
+        <div class="answer-wrap">
+          <label class="answer-label" for="answerInput">Type your answer</label>
+          <input
+            class="answer-input"
+            id="answerInput"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            disabled
+          >
+          <button class="submit-btn" id="submitBtn" type="button" disabled>
+            Submit Answer
+          </button>
+        </div>
+
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+        <div class="hint" id="hint">
+          Enter fractions greater than 1 as improper fractions, such as 7/4.
+          For time, use HHMM such as 0730; 7:30 is also accepted.
+        </div>
+      </div>
+
+      <div class="keypad" aria-label="Math keypad">
+        <button class="key-btn" data-key="1" type="button">1</button>
+        <button class="key-btn" data-key="2" type="button">2</button>
+        <button class="key-btn" data-key="3" type="button">3</button>
+        <button class="key-btn" data-key="-" type="button">−</button>
+
+        <button class="key-btn" data-key="4" type="button">4</button>
+        <button class="key-btn" data-key="5" type="button">5</button>
+        <button class="key-btn" data-key="6" type="button">6</button>
+        <button class="key-btn" data-key="." type="button">.</button>
+
+        <button class="key-btn" data-key="7" type="button">7</button>
+        <button class="key-btn" data-key="8" type="button">8</button>
+        <button class="key-btn" data-key="9" type="button">9</button>
+        <button class="key-btn" data-key="/" type="button">/</button>
+
+        <button class="key-btn clear" data-action="clear" type="button">
+          Clear
+        </button>
+        <button class="key-btn" data-key="0" type="button">0</button>
+        <button class="key-btn back" data-action="back" type="button">⌫</button>
+        <button class="key-btn" data-key=":" type="button">:</button>
+
+        <button
+          class="key-btn action"
+          data-action="enter"
+          type="button"
+          style="grid-column:1/-1"
+        >
+          Enter
+        </button>
+
+        <div class="key-help">
+          Keyboard input also works. Use Enter to submit.
+        </div>
+      </div>
+    </section>
+
+    <section class="summary" id="summary">
+      <h2 id="summaryTitle">Beginner Practice Complete!</h2>
+      <div class="summary-hero" id="summaryHero">🦊</div>
+      <div class="big-stars" id="summaryStars">⭐⭐⭐</div>
+      <div class="summary-score" id="summaryScore"></div>
+
+      <div class="summary-grid">
+        <div class="summary-stat">
+          Correct
+          <b id="endCorrect">0</b>
+        </div>
+
+        <div class="summary-stat">
+          Answered
+          <b id="endAnswered">0</b>
+        </div>
+
+        <div class="summary-stat">
+          Accuracy
+          <b id="endAccuracy">0%</b>
+        </div>
+
+        <div class="summary-stat">
+          Best Streak
+          <b id="endStreak">0</b>
+        </div>
+      </div>
+
+      <div class="summary-focus" id="summaryFocus"></div>
+      <div class="badges" id="badges"></div>
+      <div class="summary-message" id="summaryMessage"></div>
+
+      <div class="review-actions">
+        <button class="review-btn" id="reviewRoundBtn" type="button">
+          Review This Round
+        </button>
+
+        <button class="review-btn" id="reviewBankBtn" type="button">
+          Review Saved Mistakes
+        </button>
+
+        <button class="secondary-btn" id="showMistakesBtn" type="button">
+          Show Mistake List
+        </button>
+
+        <button class="primary-btn" id="playAgainBtn" type="button">
+          Start Another Practice
+        </button>
+      </div>
+    </section>
+
+    <section class="review-list" id="practiceRecords">
+      <h2>
+        <span id="practiceRecordStudentName">Student</span>'s Practice Records
+      </h2>
+      <div class="small-text" style="text-align:center">
+        Each completed practice session is saved in this browser and sent to the teacher's Google Sheet. Delete removes only the local browser copy.
+      </div>
+
+      <div class="review-table" id="practiceRecordTable"></div>
+
+      <div class="review-actions">
+        <button class="danger-btn" id="clearPracticeRecordsBtn" type="button">
+          Clear Practice Records
+        </button>
+
+        <button class="secondary-btn" id="closePracticeRecordsBtn" type="button">
+          Close Records
+        </button>
+      </div>
+    </section>
+
+    <section class="review-list" id="reviewList">
+      <h2>Saved Mistake Bank</h2>
+      <div class="small-text" style="text-align:center">
+        The list below shows mistakes for the selected year only.
+        A question is removed after two correct review attempts.
+      </div>
+
+      <div class="review-table" id="reviewTable"></div>
+
+      <div class="review-actions">
+        <button class="danger-btn" id="clearMistakesBtn" type="button">
+          Clear Saved Mistakes
+        </button>
+
+        <button class="secondary-btn" id="closeMistakesBtn" type="button">
+          Close List
+        </button>
+      </div>
+    </section>
+
+    <div class="teacher-note" id="teacherNote">
+      <b>Problem-solving practice:</b> Choose one or more problem types, or select all for a mixed practice session.
+    </div>
+
+    <footer class="footer">
+      <span>DYAA Education</span>
+      <span>Together We Learn, Together We Grow 🚀</span>
+    </footer>
+  </section>
+</main>
+
+  <script src="js/01-config.js"></script>
+  <script src="js/02-state-dom.js"></script>
+  <script src="js/03-utils.js"></script>
+  <script src="js/generators/year7.js"></script>
+  <script src="js/generators/year8-base.js"></script>
+  <script src="js/generators/year9.js"></script>
+  <script src="js/generators/year8-focused.js"></script>
+  <script src="js/generators/shared-fdp.js"></script>
+  <script src="js/problem-solving/01-core.js"></script>
+  <script src="js/problem-solving/02-arithmetic-comparison.js"></script>
+  <script src="js/problem-solving/03-fractions.js"></script>
+  <script src="js/problem-solving/04-decimals-percentages.js"></script>
+  <script src="js/problem-solving/05-ratio-proportion.js"></script>
+  <script src="js/problem-solving/06-speed-work-rate.js"></script>
+  <script src="js/problem-solving/07-age-equations.js"></script>
+  <script src="js/problem-solving/08-geometry-sequences.js"></script>
+  <script src="js/problem-solving/09-statistics-logic-model.js"></script>
+  <script src="js/04-question-engine.js"></script>
+  <script src="js/05-progress-storage.js"></script>
+  <script src="js/06-audio-effects.js"></script>
+  <script src="js/07-ui-gameplay.js"></script>
+  <script src="js/08-student-cloud-records.js"></script>
+  <script src="js/09-game-review.js"></script>
+  <script src="js/10-events-init.js"></script>
+</body>
+</html>
