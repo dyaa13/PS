@@ -33,8 +33,14 @@ const YEAR_CONFIGS = {
       decimalsMoney: 'Decimals and Money',
       percentages: 'Percentage Problems',
       ratio: 'Ratio and Sharing',
+      proportion: 'Simple Proportion and Unit Rates',
+      speedDistanceTime: 'Speed, Distance and Time',
+      age: 'Age Problems',
+      numberProblems: 'Number Problems',
+      equations: 'Simple Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
       angleReasoning: 'Angle Reasoning',
+      coordinatesLines: 'Coordinates and Straight Lines',
       sequences: 'Sequences and Patterns',
       statistics: 'Statistics',
       probability: 'Probability',
@@ -43,8 +49,10 @@ const YEAR_CONFIGS = {
     },
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
-      'percentages', 'ratio', 'geometryMeasurement', 'angleReasoning',
-      'sequences', 'statistics', 'probability', 'logicConstraints'
+      'percentages', 'ratio', 'proportion', 'speedDistanceTime',
+      'age', 'numberProblems', 'equations', 'geometryMeasurement',
+      'angleReasoning', 'coordinatesLines', 'sequences', 'statistics',
+      'probability', 'logicConstraints'
     ],
     levels: [
       ['auto', 'Automatic Mix'],

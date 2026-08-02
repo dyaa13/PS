@@ -57,6 +57,7 @@ const pauseBtn = $('pauseBtn');
 const finishBtn = $('finishBtn');
 const reviewSavedBtn = $('reviewSavedBtn');
 const testQuestionsBtn = $('testQuestionsBtn');
+const exportQuestionsBtn = $('exportQuestionsBtn');
 const viewRecordsBtn = $('viewRecordsBtn');
 const practiceRecords = $('practiceRecords');
 const practiceRecordTable = $('practiceRecordTable');

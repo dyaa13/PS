@@ -182,11 +182,12 @@ function updateSkillSelectionUI() {
   skillSelectionHelp.classList.toggle('error', !hasSelection);
   skillSelectionHelp.textContent = hasSelection
     ? `Selected ${activeSkills.length} of ${config.skills.length}. Questions will be mixed only from these skills.`
-    : 'Select at least one skill before starting or testing.';
+    : 'Select at least one skill before starting, testing or exporting.';
 
   if (!state.running) {
     startBtn.disabled = !hasSelection;
     testQuestionsBtn.disabled = !hasSelection;
+    exportQuestionsBtn.disabled = !hasSelection;
   }
 }
 

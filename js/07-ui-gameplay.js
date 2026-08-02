@@ -299,6 +299,7 @@ function setControlsForGame(active) {
   startBtn.classList.toggle('hidden', active);
   reviewSavedBtn.classList.toggle('hidden', active);
   testQuestionsBtn.classList.toggle('hidden', active);
+  exportQuestionsBtn.classList.toggle('hidden', active);
   pauseBtn.classList.toggle('hidden', !active || state.reviewMode);
   finishBtn.classList.toggle('hidden', !active);
 

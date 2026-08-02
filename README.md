@@ -18,6 +18,7 @@ This folder is a direct modular split of `DYAAPS.html`. The page design and Java
 - `js/08-student-cloud-records.js` — student records and Google Sheet uploads
 - `js/09-game-review.js` — game completion and mistake review
 - `js/10-events-init.js` — event listeners and startup
+- `js/11-pdf-export.js` — generates the selected 50-question printable PDF worksheet
 
 ## Maintenance examples
 
@@ -26,9 +27,15 @@ This folder is a direct modular split of `DYAAPS.html`. The page design and Java
 - Change Beginner/Intermediate/Advanced labels: edit `js/01-config.js`
 - Change layout or colours: edit `css/styles.css`
 - Change Google Sheet Web App URL: edit `js/01-config.js`
+- Change the 50-question PDF layout: edit `js/11-pdf-export.js`
 
 ## GitHub Pages
 
 Upload the complete folder structure. Keep all file and folder names unchanged because GitHub Pages paths are case-sensitive.
 
 The `<script>` order in `index.html` is important. Do not rearrange it unless dependencies are also reviewed.
+
+## Worksheet tools
+
+- **Test 100 Questions** checks the current level, selected problem types and question structure.
+- **Export Selected 50 Questions to PDF** generates 50 unique questions from the current selection and opens the browser print dialog. Choose **Save as PDF** to create the PDF. An answer key is included on a separate page.

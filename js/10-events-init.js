@@ -80,6 +80,7 @@ reviewSavedBtn.addEventListener('click', () => {
 });
 
 testQuestionsBtn.addEventListener('click', runQuestionTest);
+exportQuestionsBtn.addEventListener('click', exportSelectedQuestionsToPdf);
 
 closeTestBtn.addEventListener('click', () => {
   testPanel.classList.remove('show');

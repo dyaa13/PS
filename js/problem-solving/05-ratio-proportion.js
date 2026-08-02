@@ -1,75 +1,76 @@
 'use strict';
 
 /* Ratio plus direct and inverse proportion problem banks.
-   Split from DYAAPS.html without changing the original logic. */
+   All questions are written as real-life application problems.
+   Pure ratio equations, abstract tables and direct formula exercises have been removed. */
 
 function psGenRatio() {
   const s = chooseProblemStructure();
   const type = randInt(1, 10);
 
-  // 1. Sharing in a given ratio
+  // 1. Sharing money or resources in a given ratio
   if (type === 1) {
     if (s === 'basic') {
       const a = randInt(2, 6);
-      const b = randInt(3, 8);
+      const b = randInt(a + 1, a + 5);
       const unit = randInt(4, 12);
       const total = (a + b) * unit;
 
       return psQ(
         'ratio',
         s,
-        `A prize of $${total} is shared between Mia and Noah in the ratio ${a}:${b}. How much does Mia receive?`,
+        `A $${total} fundraising prize is shared between two teams in the ratio ${a}:${b}. How much does the smaller team receive?`,
         a * unit,
-        'Add the ratio parts, find the value of one part, then multiply by Mia’s number of parts.'
+        'Add the ratio parts, find the value of one part, then multiply by the smaller number of parts.'
       );
     }
 
     if (s === 'multi') {
       const a = randInt(2, 5);
-      const b = randInt(3, 6);
-      const c = randInt(4, 8);
+      const b = randInt(3, 7);
+      const c = randInt(4, 9);
       const unit = randInt(5, 12);
       const total = (a + b + c) * unit;
 
       return psQ(
         'ratio',
         s,
-        `A grant of $${total} is shared among three clubs in the ratio ${a}:${b}:${c}. Calculate the difference between the largest share and the smallest share.`,
+        `A school distributes ${total} new books among three classes in the ratio ${a}:${b}:${c}. How many more books does the class with the largest share receive than the class with the smallest share?`,
         (Math.max(a, b, c) - Math.min(a, b, c)) * unit,
-        'Find the value of one ratio part, then compare the largest and smallest numbers of parts.'
+        'Find the value of one ratio part, then compare the largest and smallest shares.'
       );
     }
 
     const a = randInt(2, 5);
     const b = randInt(a + 1, a + 5);
-    const unit = randInt(6, 15);
+    const unit = randInt(6, 14);
     const reserved = randInt(3, 8) * 10;
-    const sharedAmount = (a + b) * unit;
-    const total = sharedAmount + reserved;
+    const shared = (a + b) * unit;
+    const total = shared + reserved;
 
     return psQ(
       'ratio',
       s,
-      `A fund contains $${total}. First, $${reserved} is reserved for equipment. The rest is shared between two teams in the ratio ${a}:${b}. Calculate the larger share.`,
+      `A community fund contains $${total}. First, $${reserved} is kept for venue hire. The rest is shared between two clubs in the ratio ${a}:${b}. What is the larger club's share?`,
       b * unit,
-      'Subtract the reserved amount first, then divide the remainder according to the ratio.'
+      'Subtract the reserved amount first, then divide the remaining money in the stated ratio.'
     );
   }
 
-  // 2. Total known: find one of the parts
+  // 2. Finding a group from the total
   if (type === 2) {
     if (s === 'basic') {
-      const boysParts = randInt(2, 5);
-      const girlsParts = randInt(boysParts + 1, boysParts + 5);
+      const juniorParts = randInt(2, 5);
+      const seniorParts = randInt(juniorParts + 1, juniorParts + 5);
       const unit = randInt(4, 10);
-      const total = (boysParts + girlsParts) * unit;
+      const total = (juniorParts + seniorParts) * unit;
 
       return psQ(
         'ratio',
         s,
-        `There are ${total} students in a group. The ratio of boys to girls is ${boysParts}:${girlsParts}. How many girls are there?`,
-        girlsParts * unit,
-        'Add the ratio parts and use the total to find the value of one part.'
+        `There are ${total} students at a sports clinic. The ratio of junior students to senior students is ${juniorParts}:${seniorParts}. How many senior students are there?`,
+        seniorParts * unit,
+        'Add the ratio parts, use the total to find one part, then find the senior group.'
       );
     }
 
@@ -83,9 +84,9 @@ function psGenRatio() {
       return psQ(
         'ratio',
         s,
-        `A box contains ${total} red, blue and green counters in the ratio ${a}:${b}:${c}. How many blue counters are in the box?`,
-        b * unit,
-        'Add all three ratio parts, find one part, then multiply by the number of blue parts.'
+        `A garden centre has ${total} flowering plants divided among roses, lilies and daisies in the ratio ${a}:${b}:${c}. How many lilies and daisies are there altogether?`,
+        (b + c) * unit,
+        'Find one ratio part from the total, then combine the required two groups.'
       );
     }
 
@@ -98,26 +99,26 @@ function psGenRatio() {
     return psQ(
       'ratio',
       s,
-      `Two classes contain ${total} students in the ratio ${a}:${b}. Then ${moved} students move from the larger class to the smaller class. How many students are now in the smaller class?`,
+      `Two workshops have ${total} students altogether in the ratio ${a}:${b}. Then ${moved} students move from the larger workshop to the smaller workshop. How many students are now in the smaller workshop?`,
       a * unit + moved,
-      'Use the original total and ratio to find both class sizes before applying the transfer.'
+      'Use the total and original ratio to find both group sizes, then apply the transfer.'
     );
   }
 
-  // 3. One part known: find the total
+  // 3. Finding the total from one known group
   if (type === 3) {
     if (s === 'basic') {
       const a = randInt(2, 6);
       const b = randInt(3, 8);
       const unit = randInt(4, 10);
-      const firstPart = a * unit;
+      const known = a * unit;
 
       return psQ(
         'ratio',
         s,
-        `The ratio of red beads to blue beads is ${a}:${b}. There are ${firstPart} red beads. How many beads are there altogether?`,
+        `A wildlife park has parrots and finches in the ratio ${a}:${b}. There are ${known} parrots. How many birds are there altogether?`,
         (a + b) * unit,
-        'Use the known red amount to find the value of one ratio part, then find the total number of parts.'
+        'Use the known group to find one ratio part, then find the total number of parts.'
       );
     }
 
@@ -131,9 +132,9 @@ function psGenRatio() {
       return psQ(
         'ratio',
         s,
-        `The numbers of Year 7, Year 8 and Year 9 students at an event are in the ratio ${a}:${b}:${c}. There are ${known} Year 8 students. How many students are at the event altogether?`,
+        `At a school event, the numbers of students from three houses are in the ratio ${a}:${b}:${c}. The second house has ${known} students. How many students are at the event altogether?`,
         (a + b + c) * unit,
-        'Find the value of one ratio part from the Year 8 group, then multiply by the total number of parts.'
+        'Use the known second group to find one ratio part, then multiply by the total number of parts.'
       );
     }
 
@@ -141,109 +142,111 @@ function psGenRatio() {
     const b = randInt(3, 6);
     const c = randInt(4, 8);
     const unit = randInt(5, 12);
-    const givenAway = randInt(2, Math.min(8, b * unit - 1));
-    const remaining = b * unit - givenAway;
+    const sold = randInt(2, Math.min(8, b * unit - 1));
+    const remaining = b * unit - sold;
 
     return psQ(
       'ratio',
       s,
-      `Three collections are in the ratio ${a}:${b}:${c}. After ${givenAway} items are removed from the second collection, it contains ${remaining} items. How many items were in the three collections originally?`,
+      `A shop originally stocked three types of gift boxes in the ratio ${a}:${b}:${c}. After ${sold} boxes of the second type are sold, ${remaining} of that type remain. How many gift boxes were stocked originally?`,
       (a + b + c) * unit,
-      'Reconstruct the original second collection, use it to find one ratio part, then calculate the original total.'
+      'Reconstruct the original second group, find one ratio part, then calculate the original total.'
     );
   }
 
-  // 4. Equivalent ratios
+  // 4. Scaling a recipe or mixture
   if (type === 4) {
     if (s === 'basic') {
-      const a = randInt(2, 7);
-      const b = randInt(3, 9);
-      const k = randInt(2, 6);
+      const originalServings = pick([2, 3, 4, 5, 6]);
+      const scale = randInt(2, 4);
+      const ingredient = randInt(2, 6);
+      const targetServings = originalServings * scale;
 
       return psQ(
         'ratio',
         s,
-        `${a}:${b} = ${a * k}:?. Find the missing number.`,
-        b * k,
-        'Multiply both parts of the ratio by the same scale factor.'
+        `A soup recipe for ${originalServings} people uses ${ingredient} cups of stock. How many cups of stock are needed for ${targetServings} people?`,
+        ingredient * scale,
+        'The number of servings and the ingredient amount must be multiplied by the same scale factor.'
       );
     }
 
     if (s === 'multi') {
-      const a = randInt(2, 7);
-      const b = randInt(3, 9);
-      const k = randInt(2, 7);
+      const originalServings = pick([3, 4, 5, 6]);
+      const scale = randInt(2, 4);
+      const flour = randInt(2, 6);
+      const milk = randInt(1, 5);
+      const targetServings = originalServings * scale;
 
       return psQ(
         'ratio',
         s,
-        `?:${b * k} is equivalent to ${a}:${b}. Find the missing number.`,
-        a * k,
-        'Find the scale factor from the second ratio part, then apply it to the first part.'
+        `A pancake recipe for ${originalServings} people uses ${flour} cups of flour and ${milk} cups of milk. The recipe is adjusted for ${targetServings} people. How many cups of flour and milk are needed altogether?`,
+        (flour + milk) * scale,
+        'Find the serving scale factor, scale both ingredients, then add the new amounts.'
       );
     }
 
-    const a = randInt(2, 6);
-    const b = randInt(3, 8);
-    const firstScale = randInt(2, 5);
-    const secondScale = randInt(2, 4);
-    const firstTerm = a * firstScale * secondScale;
+    const concentrateParts = randInt(1, 3);
+    const waterParts = randInt(concentrateParts + 2, concentrateParts + 6);
+    const cupSize = randInt(2, 5);
+    const jugs = randInt(2, 5);
+    const oneJug = (concentrateParts + waterParts) * cupSize;
 
     return psQ(
       'ratio',
       s,
-      `${a}:${b} = ${a * firstScale}:${b * firstScale}. The second ratio is then enlarged again so that its first term becomes ${firstTerm}. What is the corresponding second term?`,
-      b * firstScale * secondScale,
-      'Identify the second scale factor and apply it to both terms of the already enlarged ratio.'
+      `Fruit concentrate and water are mixed in the ratio ${concentrateParts}:${waterParts}. One jug contains ${oneJug} cups of drink. How many cups of concentrate are needed to make ${jugs} identical jugs?`,
+      concentrateParts * cupSize * jugs,
+      'Use the total in one jug to find one ratio part, then scale the concentrate amount by the number of jugs.'
     );
   }
 
-  // 5. Ratio tables
+  // 5. Map scales and plans
   if (type === 5) {
     if (s === 'basic') {
-      const rate = randInt(3, 9);
-      const first = randInt(2, 4);
-      const second = randInt(first + 1, first + 4);
-      const third = randInt(second + 1, second + 5);
+      const scale = pick([2, 5, 10, 20, 25, 50]);
+      const mapLength = randInt(2, 12);
 
       return psQ(
         'ratio',
         s,
-        `A ratio table shows: boxes ${first}, ${second}, ${third}; pencils ${first * rate}, ${second * rate}, ?. How many pencils correspond to ${third} boxes?`,
-        third * rate,
-        'Use one complete column to find the constant number of pencils per box.'
+        `A map uses the scale 1 cm : ${scale} km. Two towns are ${mapLength} cm apart on the map. What is the actual distance between them?`,
+        mapLength * scale,
+        'Multiply the map distance by the number of kilometres represented by 1 cm.'
       );
     }
 
     if (s === 'multi') {
-      const rate = randInt(4, 12);
-      const knownQuantity = randInt(3, 7);
-      const targetQuantity = randInt(knownQuantity + 3, knownQuantity + 9);
+      const scale = pick([2, 5, 10, 20, 25]);
+      const firstLeg = randInt(2, 8);
+      const secondLeg = randInt(2, 8);
+      const detour = randInt(1, 4);
 
       return psQ(
         'ratio',
         s,
-        `A ratio table contains the pair (${knownQuantity}, ${knownQuantity * rate}). Use the same ratio to complete the pair (${targetQuantity}, ?).`,
-        targetQuantity * rate,
-        'First find the multiplier from the known pair, then apply it to the target quantity.'
+        `A map uses the scale 1 cm : ${scale} km. A planned route has map sections of ${firstLeg} cm and ${secondLeg} cm, plus a ${detour} km road detour. What is the total actual distance?`,
+        (firstLeg + secondLeg) * scale + detour,
+        'Convert the map sections to actual distance, add them, then include the road detour.'
       );
     }
 
-    const rate = randInt(4, 10);
-    const x1 = randInt(2, 5);
-    const x2 = randInt(x1 + 2, x1 + 6);
-    const y3 = randInt(x2 + 2, x2 + 7) * rate;
+    const scale = pick([5, 10, 20, 25, 50]);
+    const originalMapLength = randInt(3, 12);
+    const enlargement = pick([2, 3]);
+    const actualDistance = originalMapLength * scale;
 
     return psQ(
       'ratio',
       s,
-      `A ratio table shows the pairs (${x1}, ${x1 * rate}), (${x2}, ${x2 * rate}) and (?, ${y3}). Find the missing first value.`,
-      y3 / rate,
-      'Use the first two pairs to identify the constant ratio, then work backwards from the final second value.'
+      `A walking route is ${actualDistance} km long. It is shown on a map with scale 1 cm : ${scale} km. The map is then enlarged by a factor of ${enlargement}. How long is the route on the enlarged map?`,
+      originalMapLength * enlargement,
+      'First find the route length on the original map, then apply the enlargement factor.'
     );
   }
 
-  // 6. Changing ratios
+  // 6. Changing ratios after adding, removing or transferring items
   if (type === 6) {
     if (s === 'basic') {
       const redParts = randInt(2, 5);
@@ -256,9 +259,9 @@ function psGenRatio() {
       return psQ(
         'ratio',
         s,
-        `The ratio of red counters to blue counters is ${redParts}:${blueParts}. After ${added} red counters are added, the two colours have equal numbers. How many blue counters were there originally?`,
+        `A craft box contains red and blue beads in the ratio ${redParts}:${blueParts}. After ${added} red beads are added, the two colours have equal numbers. How many blue beads were there originally?`,
         blue,
-        'The difference between the two original amounts equals the number of red counters added.'
+        'The original difference between the two groups equals the number added to the smaller group.'
       );
     }
 
@@ -275,9 +278,9 @@ function psGenRatio() {
       return psQ(
         'ratio',
         s,
-        `Red and blue counters are originally in the ratio ${redParts}:${blueParts}. After ${added} red counters are added, the new ratio is ${newRatio}. How many counters were there originally altogether?`,
+        `Red and blue tokens are originally in the ratio ${redParts}:${blueParts}. After ${added} red tokens are added, the new ratio is ${newRatio}. How many tokens were there originally altogether?`,
         (redParts + blueParts) * unit,
-        'Represent the original amounts using one ratio part, then use the added counters and the new ratio to determine that part.'
+        'Represent the original amounts using one ratio part, then use the added tokens and new ratio to find that part.'
       );
     }
 
@@ -293,25 +296,26 @@ function psGenRatio() {
     return psQ(
       'ratio',
       s,
-      `Red and blue counters are originally in the ratio ${redParts}:${blueParts}. Then ${transferred} blue counters are moved to the red group. The new ratio is ${newRatio}. How many counters were there originally altogether?`,
+      `Two storage bins contain red and blue blocks in the ratio ${redParts}:${blueParts}. Then ${transferred} blue blocks are moved into the red bin, giving a new ratio of ${newRatio}. How many blocks were there originally altogether?`,
       (redParts + blueParts) * unit,
-      'The transfer changes both groups but not the total. Use the original ratio and transferred amount to find one original ratio part.'
+      'The transfer changes both groups but not the total. Use the change and the two ratios to find one original part.'
     );
   }
 
-  // 7. Mixed ratios
+  // 7. Linked ratios in a real context
   if (type === 7) {
     if (s === 'basic') {
-      const a = randInt(2, 6);
-      const b = randInt(3, 7);
-      const c = randInt(4, 9);
+      const small = randInt(2, 5);
+      const medium = randInt(3, 7);
+      const large = randInt(4, 9);
+      const unit = randInt(3, 8);
 
-      return psQRatio(
+      return psQ(
         'ratio',
         s,
-        `A:B = ${a}:${b} and B:C = ${b}:${c}. Find A:C in its simplest form.`,
-        simplifyRatio(a, c),
-        'The value representing B is already the same in both ratios, so compare A directly with C.'
+        `A bakery packs small, medium and large snack boxes. The ratio of small to medium boxes is ${small}:${medium}, and the ratio of medium to large boxes is ${medium}:${large}. If there are ${medium * unit} medium boxes, how many large boxes are there?`,
+        large * unit,
+        'The medium amount uses the same number of parts in both ratios, so use it to find one part.'
       );
     }
 
@@ -324,12 +328,15 @@ function psGenRatio() {
     const combinedC = d * (commonB / c);
 
     if (s === 'multi') {
-      return psQRatio(
+      const unit = randInt(3, 8);
+      const middleAmount = commonB * unit;
+
+      return psQ(
         'ratio',
         s,
-        `A:B = ${a}:${b} and B:C = ${c}:${d}. Find A:C in its simplest form.`,
-        simplifyRatio(combinedA, combinedC),
-        'Scale both ratios until the two values representing B are equal, then compare A with C.'
+        `At a camp, the ratio of junior to intermediate students is ${a}:${b}, while the ratio of intermediate to senior students is ${c}:${d}. There are ${middleAmount} intermediate students. How many junior and senior students are there altogether?`,
+        (combinedA + combinedC) * unit,
+        'Make the intermediate parts equal in both ratios, then use the known intermediate group to find one combined part.'
       );
     }
 
@@ -339,147 +346,151 @@ function psGenRatio() {
     return psQ(
       'ratio',
       s,
-      `A:B = ${a}:${b} and B:C = ${c}:${d}. The total of A, B and C is ${total}. Calculate C.`,
+      `A factory has day, evening and night workers. The ratio of day to evening workers is ${a}:${b}, and the ratio of evening to night workers is ${c}:${d}. There are ${total} workers altogether. How many work the night shift?`,
       combinedC * unit,
-      'Combine the two ratios by making the B-parts equal, then use the total to find the value of one combined ratio part.'
+      'Combine the two ratios by making the evening parts equal, then use the total to find one combined part.'
     );
   }
 
-  // 8. Recipe adjustment
+  // 8. Best-buy and unit-rate decisions
   if (type === 8) {
     if (s === 'basic') {
-      const originalServings = pick([2, 3, 4, 5, 6]);
-      const scale = randInt(2, 4);
-      const ingredient = randInt(2, 6);
-      const targetServings = originalServings * scale;
+      const items = randInt(3, 9);
+      const unitCost = randInt(3, 12);
+      const totalCost = items * unitCost;
 
       return psQ(
         'ratio',
         s,
-        `A recipe for ${originalServings} people uses ${ingredient} cups of rice. How many cups are needed for ${targetServings} people?`,
-        ingredient * scale,
-        'The number of servings and the ingredient amount must be multiplied by the same scale factor.'
+        `${items} identical notebooks cost $${totalCost}. A student needs to know the price of one notebook before comparing shops. What is the unit price?`,
+        unitCost,
+        'Divide the total cost by the number of notebooks.'
       );
     }
 
     if (s === 'multi') {
-      const originalServings = pick([3, 4, 5, 6]);
-      const scale = randInt(2, 4);
-      const flour = randInt(2, 6);
-      const milk = randInt(1, 5);
-      const targetServings = originalServings * scale;
+      const knownQuantity = randInt(3, 8);
+      const unitCost = randInt(3, 12);
+      const targetQuantity = randInt(knownQuantity + 2, knownQuantity + 8);
+      const delivery = randInt(2, 8);
 
       return psQ(
         'ratio',
         s,
-        `A recipe for ${originalServings} people uses ${flour} cups of flour and ${milk} cups of milk. The recipe is adjusted for ${targetServings} people. How many cups of flour and milk are needed altogether?`,
-        (flour + milk) * scale,
-        'Find the serving scale factor, multiply both ingredient amounts, then add them.'
+        `${knownQuantity} metres of fabric cost $${knownQuantity * unitCost}. At the same unit rate, a customer orders ${targetQuantity} metres and pays a $${delivery} delivery fee. What is the total cost?`,
+        targetQuantity * unitCost + delivery,
+        'Find the cost per metre, calculate the fabric cost, then add the delivery fee.'
       );
     }
 
-    const flourParts = randInt(2, 5);
-    const sugarParts = randInt(1, 4);
-    const batchUnit = randInt(2, 6);
-    const batches = randInt(2, 5);
-    const oneBatchTotal = (flourParts + sugarParts) * batchUnit;
+    const packAItems = randInt(3, 7);
+    const packBItems = randInt(4, 8);
+    const cheaperRate = randInt(3, 8);
+    const dearerRate = cheaperRate + randInt(1, 4);
+    const packACheaper = chance(0.5);
+    const packACost = packAItems * (packACheaper ? cheaperRate : dearerRate);
+    const packBCost = packBItems * (packACheaper ? dearerRate : cheaperRate);
+    const comparisonQuantity = lcm(packAItems, packBItems);
 
     return psQ(
       'ratio',
       s,
-      `Flour and sugar are mixed in the ratio ${flourParts}:${sugarParts}. One batch uses ${oneBatchTotal} cups of the mixture. How many cups of sugar are needed for ${batches} identical batches?`,
-      sugarParts * batchUnit * batches,
-      'Use the total mixture in one batch to find one ratio part, then scale the sugar amount by the number of batches.'
+      `Pack A contains ${packAItems} drink bottles and costs $${packACost}. Pack B contains ${packBItems} bottles and costs $${packBCost}. A sports club needs ${comparisonQuantity} bottles. How much money can it save by choosing the better-value pack?`,
+      (dearerRate - cheaperRate) * comparisonQuantity,
+      'Compare the unit prices, then compare the costs for the same total number of bottles.'
     );
   }
 
-  // 9. Map scales
+  // 9. Mixtures and concentration ratios
   if (type === 9) {
     if (s === 'basic') {
-      const scale = pick([2, 5, 10, 20, 25, 50]);
-      const mapLength = randInt(2, 12);
+      const syrupParts = randInt(1, 3);
+      const waterParts = randInt(3, 7);
+      const unit = randInt(2, 5);
+      const total = (syrupParts + waterParts) * unit;
 
       return psQ(
         'ratio',
         s,
-        `A map uses the scale 1 cm : ${scale} km. Two towns are ${mapLength} cm apart on the map. What is the actual distance in kilometres?`,
-        mapLength * scale,
-        'Multiply the map distance by the number of kilometres represented by 1 cm.'
+        `A drink is made by mixing syrup and water in the ratio ${syrupParts}:${waterParts}. A jug contains ${total} cups of drink. How many cups are syrup?`,
+        syrupParts * unit,
+        'Add the ratio parts, find one part, then calculate the syrup amount.'
       );
     }
 
     if (s === 'multi') {
-      const scale = pick([2, 5, 10, 20, 25]);
-      const firstLeg = randInt(2, 8);
-      const secondLeg = randInt(2, 8);
+      const paintA = randInt(2, 5);
+      const paintB = randInt(3, 7);
+      const unit = randInt(2, 5);
+      const tins = randInt(2, 4);
+      const oneTin = (paintA + paintB) * unit;
 
       return psQ(
         'ratio',
         s,
-        `A map uses the scale 1 cm : ${scale} km. A route has two map sections measuring ${firstLeg} cm and ${secondLeg} cm. What is the total actual distance?`,
-        (firstLeg + secondLeg) * scale,
-        'Add the map lengths first, then apply the map scale.'
+        `Blue and white paint are mixed in the ratio ${paintA}:${paintB}. One tin contains ${oneTin} litres of paint. How many litres of white paint are needed for ${tins} identical tins?`,
+        paintB * unit * tins,
+        'Find the amount of white paint in one tin, then multiply by the number of tins.'
       );
     }
 
-    const scale = pick([5, 10, 20, 25, 50]);
-    const originalMapLength = randInt(3, 12);
-    const enlargement = pick([2, 3]);
-    const actualDistance = originalMapLength * scale;
+    const juiceParts = randInt(2, 4);
+    const waterParts = randInt(4, 7);
+    const unit = randInt(3, 6);
+    const addedWaterParts = randInt(1, 3);
+    const juice = juiceParts * unit;
+    const water = waterParts * unit;
+    const addedWater = addedWaterParts * unit;
+    const newRatio = simplifyRatio(juice, water + addedWater);
 
     return psQ(
       'ratio',
       s,
-      `A route is ${actualDistance} km long. On a map with scale 1 cm : ${scale} km, the map is then enlarged by a factor of ${enlargement}. How long is the route on the enlarged map, in centimetres?`,
-      originalMapLength * enlargement,
-      'First find the route length on the original map, then apply the enlargement factor.'
+      `A container holds juice and water in the ratio ${juiceParts}:${waterParts}. After ${addedWater} litres of water are added, the new ratio of juice to water is ${newRatio}. How many litres were in the container before the water was added?`,
+      juice + water,
+      'Use the original ratio and the amount of water added to determine one original ratio part.'
     );
   }
 
-  // 10. Unit rates
+  // 10. Scale models and resizing
   if (s === 'basic') {
-    const items = randInt(3, 9);
-    const unitCost = randInt(3, 12);
-    const totalCost = items * unitCost;
+    const scale = pick([2, 3, 4, 5]);
+    const modelLength = randInt(3, 12);
 
     return psQ(
       'ratio',
       s,
-      `${items} notebooks cost $${totalCost}. What is the cost per notebook?`,
-      unitCost,
-      'Divide the total cost by the number of notebooks.'
+      `A model car is built at a scale of 1:${scale}. The model is ${modelLength} cm long. How long is the real car in centimetres?`,
+      modelLength * scale,
+      'Multiply the model length by the scale factor.'
     );
   }
 
   if (s === 'multi') {
-    const knownQuantity = randInt(3, 8);
-    const unitCost = randInt(3, 12);
-    const targetQuantity = randInt(knownQuantity + 2, knownQuantity + 8);
+    const scale = pick([20, 25, 50, 100]);
+    const length = randInt(4, 12);
+    const width = randInt(3, 10);
 
     return psQ(
       'ratio',
       s,
-      `${knownQuantity} metres of fabric cost $${knownQuantity * unitCost}. At the same unit rate, how much will ${targetQuantity} metres cost?`,
-      targetQuantity * unitCost,
-      'Find the cost per metre, then multiply by the required number of metres.'
+      `A floor plan uses the scale 1 cm : ${scale} cm. A rectangular room measures ${length} cm by ${width} cm on the plan. What is the actual perimeter of the room, in centimetres?`,
+      2 * (length + width) * scale,
+      'Find the plan perimeter first, then apply the scale factor to the full length.'
     );
   }
 
-  const packAItems = randInt(3, 7);
-  const packBItems = randInt(4, 8);
-  const cheaperRate = randInt(3, 8);
-  const dearerRate = cheaperRate + randInt(1, 4);
-  const packACheaper = chance(0.5);
-  const packACost = packAItems * (packACheaper ? cheaperRate : dearerRate);
-  const packBCost = packBItems * (packACheaper ? dearerRate : cheaperRate);
-  const comparisonQuantity = lcm(packAItems, packBItems);
+  const originalScale = pick([20, 25, 50]);
+  const newScale = originalScale * pick([2, 4]);
+  const originalDrawingLength = randInt(4, 12);
+  const actualLength = originalDrawingLength * originalScale;
 
   return psQ(
     'ratio',
     s,
-    `Pack A contains ${packAItems} items and costs $${packACost}. Pack B contains ${packBItems} items and costs $${packBCost}. For ${comparisonQuantity} items, how much money is saved by buying at the cheaper unit rate?`,
-    (dearerRate - cheaperRate) * comparisonQuantity,
-    'Calculate the cost per item for each pack, then compare the costs for the same number of items.'
+    `A wall is shown as ${originalDrawingLength} cm long on a plan with scale 1 cm : ${originalScale} cm. The same wall is redrawn using scale 1 cm : ${newScale} cm. How long should it appear on the new plan?`,
+    actualLength / newScale,
+    'Find the actual wall length from the first plan, then convert it using the new scale.'
   );
 }
 
@@ -487,7 +498,7 @@ function psGenProportion() {
   const s = chooseProblemStructure();
   const type = randInt(1, 6);
 
-  // 1. Fixed unit price — direct proportion
+  // 1. Fixed price or fixed rate — direct proportion
   if (type === 1) {
     if (s === 'basic') {
       const unitPrice = randInt(3, 12);
@@ -497,9 +508,9 @@ function psGenProportion() {
       return psQ(
         'proportion',
         s,
-        `${knownQuantity} identical items cost $${knownQuantity * unitPrice}. At the same unit price, how much will ${targetQuantity} items cost?`,
+        `${knownQuantity} identical lunch boxes cost $${knownQuantity * unitPrice}. At the same price per box, how much will ${targetQuantity} boxes cost?`,
         targetQuantity * unitPrice,
-        'Find the cost of one item, then multiply by the new quantity.'
+        'Find the price of one box, then multiply by the new quantity.'
       );
     }
 
@@ -513,7 +524,7 @@ function psGenProportion() {
       return psQ(
         'proportion',
         s,
-        `${knownQuantity} kg of fruit costs $${knownQuantity * unitPrice}. At the same price per kilogram, a customer buys ${targetQuantity} kg and pays $${payment}. How much change should the customer receive?`,
+        `${knownQuantity} kg of apples costs $${knownQuantity * unitPrice}. At the same price per kilogram, a customer buys ${targetQuantity} kg and pays $${payment}. How much change should the customer receive?`,
         payment - targetCost,
         'Find the price per kilogram, calculate the new cost, then subtract it from the payment.'
       );
@@ -530,11 +541,11 @@ function psGenProportion() {
       s,
       `${knownQuantity} identical folders cost $${knownQuantity * unitPrice}. A school later places an order costing $${totalCost} at the same unit price, but returns ${returnedQuantity} folders. How many folders does the school keep?`,
       purchasedQuantity - returnedQuantity,
-      'Use the fixed unit price to find the original number ordered, then subtract the returned folders.'
+      'Use the fixed unit price to find the number originally ordered, then subtract the returned folders.'
     );
   }
 
-  // 2. Fixed speed — distance is directly proportional to time
+  // 2. Constant speed — distance proportional to travelling time
   if (type === 2) {
     if (s === 'basic') {
       const speed = pick([40, 50, 60, 70, 80, 90]);
@@ -544,7 +555,7 @@ function psGenProportion() {
       return psQ(
         'proportion',
         s,
-        `A vehicle travels ${speed * knownTime} km in ${knownTime} hours at a constant speed. How far will it travel in ${targetTime} hours at the same speed?`,
+        `A delivery van travels ${speed * knownTime} km in ${knownTime} hours at a constant speed. How far will it travel in ${targetTime} hours at the same speed?`,
         speed * targetTime,
         'Find the distance travelled in one hour, then multiply by the new time.'
       );
@@ -559,7 +570,7 @@ function psGenProportion() {
       return psQ(
         'proportion',
         s,
-        `A train travels ${speed * knownTime} km in ${knownTime} hours at a constant speed. It then travels for ${firstTime} hours, stops, and continues for another ${secondTime} hours at the same speed. What total distance does it travel while moving?`,
+        `A train travels ${speed * knownTime} km in ${knownTime} hours at a constant speed. On another journey, it travels for ${firstTime} hours, stops at a station, and then travels for another ${secondTime} hours at the same speed. What total distance does it travel while moving?`,
         speed * (firstTime + secondTime),
         'Find the constant speed, then multiply it by the total time spent moving.'
       );
@@ -573,13 +584,13 @@ function psGenProportion() {
     return psQ(
       'proportion',
       s,
-      `A bus travels at a constant speed. After ${elapsedTime} hours, it has ${remainingDistance} km left in a journey that takes ${totalTime} hours altogether. What is the total length of the journey?`,
+      `A bus travels at a constant speed. After ${elapsedTime} hours, it still has ${remainingDistance} km left in a journey that takes ${totalTime} hours altogether. What is the total length of the journey?`,
       speed * totalTime,
-      'Use the remaining distance and remaining time to find the constant speed, then find the full distance.'
+      'Use the remaining distance and remaining time to find the speed, then find the whole journey distance.'
     );
   }
 
-  // 3. Fixed work efficiency — output depends on machine-hours or worker-hours
+  // 3. Production and machine-hours
   if (type === 3) {
     if (s === 'basic') {
       const rate = randInt(5, 15);
@@ -593,7 +604,7 @@ function psGenProportion() {
         s,
         `${machines1} identical machines produce ${firstOutput} parts in ${hours} hours. At the same efficiency, how many parts will ${machines2} machines produce in ${hours} hours?`,
         machines2 * hours * rate,
-        'The time is unchanged, so output is directly proportional to the number of machines.'
+        'The time is unchanged, so output changes in direct proportion to the number of machines.'
       );
     }
 
@@ -620,6 +631,7 @@ function psGenProportion() {
     const firstHours = randInt(2, 5);
     const secondMachines = randInt(3, 7);
     const secondHours = randInt(2, 5);
+    const rejected = randInt(10, 40);
     const totalOutput = rate * (
       firstMachines * firstHours + secondMachines * secondHours
     );
@@ -627,13 +639,13 @@ function psGenProportion() {
     return psQ(
       'proportion',
       s,
-      `${firstMachines} identical printers operate for ${firstHours} hours. Then ${secondMachines} printers operate for another ${secondHours} hours. Each printer works at the same constant rate of ${rate} pages per hour. How many pages are printed altogether?`,
-      totalOutput,
-      'Calculate the printer-hours in each stage, multiply by the common rate, and add the two outputs.'
+      `${firstMachines} printers operate for ${firstHours} hours. Then ${secondMachines} printers operate for another ${secondHours} hours. Each printer produces ${rate} pages per hour, but ${rejected} pages fail quality checking. How many acceptable pages remain?`,
+      totalOutput - rejected,
+      'Calculate the output from both stages, add them, then subtract the rejected pages.'
     );
   }
 
-  // 4. Number of workers and time — inverse proportion
+  // 4. Workers and completion time — inverse proportion
   if (type === 4) {
     if (s === 'basic') {
       const workers1 = randInt(3, 8);
@@ -649,9 +661,9 @@ function psGenProportion() {
       return psQ(
         'proportion',
         s,
-        `${workers1} workers can complete a task in ${days1} days. Assuming all workers have the same efficiency, how many days would ${workers2} workers require?`,
+        `${workers1} workers can plant a park in ${days1} days. Assuming everyone works at the same rate, how many days would ${workers2} workers need?`,
         totalWorkerDays / workers2,
-        'For a fixed amount of work, workers multiplied by days remains constant.'
+        'For a fixed job, the number of workers multiplied by the number of days stays constant.'
       );
     }
 
@@ -672,9 +684,9 @@ function psGenProportion() {
       return psQ(
         'proportion',
         s,
-        `${workers1} workers are expected to finish a project in ${plannedDays} days. After they work for ${firstDays} days, the team changes to ${workers2} workers of equal efficiency. How many more days are needed to complete the project?`,
+        `${workers1} workers are expected to complete a landscaping project in ${plannedDays} days. After ${firstDays} days, the team changes to ${workers2} equally efficient workers. How many more days are needed?`,
         remainingWorkerDays / workers2,
-        'Convert the whole project into worker-days, subtract the completed work, then divide by the new team size.'
+        'Convert the whole project into worker-days, subtract completed work, then divide by the new team size.'
       );
     }
 
@@ -696,136 +708,125 @@ function psGenProportion() {
     return psQ(
       'proportion',
       s,
-      `${workers1} workers could complete a project in ${plannedDays} days. They work together for ${firstDays} days, after which the remaining work is completed in ${secondDays} days by a different-sized team of equally efficient workers. How many workers are in the second team?`,
+      `${workers1} workers could complete a building project in ${plannedDays} days. They work for ${firstDays} days, and the remaining work is then completed in ${secondDays} days by a different-sized team of equally efficient workers. How many workers are in the second team?`,
       workers2,
       'Find the total worker-days, subtract the first stage, then divide the remaining worker-days by the second-stage time.'
     );
   }
 
-  // 5. Proportional relationships shown in tables
+  // 5. Supplies, servings and stock planning
   if (type === 5) {
     if (s === 'basic') {
-      const k = randInt(3, 12);
-      const x1 = randInt(2, 5);
-      const x2 = x1 + randInt(1, 3);
-      const x3 = x2 + randInt(1, 3);
+      const people1 = randInt(3, 8);
+      const bottles1 = randInt(2, 6);
+      const scale = randInt(2, 4);
+      const people2 = people1 * scale;
 
       return psQ(
         'proportion',
         s,
-        `A table shows a direct proportion: x-values ${x1}, ${x2}, ${x3}; corresponding y-values ${x1 * k}, ${x2 * k}, ?. What is the missing y-value?`,
-        x3 * k,
-        'Find the constant value of y ÷ x, then use it for the missing entry.'
+        `A school camp provides ${bottles1} bottles of water for every ${people1} students. At the same rate, how many bottles are needed for ${people2} students?`,
+        bottles1 * scale,
+        'The number of students and the number of bottles must be scaled by the same factor.'
       );
     }
 
     if (s === 'multi') {
-      const constant = pick([24, 36, 48, 60, 72, 84, 96, 120]);
-      const divisors = [];
-
-      for (let value = 2; value <= 12; value++) {
-        if (constant % value === 0) divisors.push(value);
-      }
-
-      if (divisors.length < 3) return psGenProportion();
-
-      const shuffled = [...divisors].sort(() => Math.random() - 0.5);
-      const [x1, x2, x3] = shuffled.slice(0, 3);
+      const people1 = randInt(4, 8);
+      const packs1 = randInt(2, 5);
+      const scale = randInt(2, 4);
+      const people2 = people1 * scale;
+      const sparePacks = randInt(1, 3);
 
       return psQ(
         'proportion',
         s,
-        `A table shows an inverse proportion: x-values ${x1}, ${x2}, ${x3}; corresponding y-values ${constant / x1}, ${constant / x2}, ?. What is the missing y-value?`,
-        constant / x3,
-        'For inverse proportion, each x × y product is the same.'
+        `A first-aid event uses ${packs1} supply packs for every ${people1} participants. The organisers expect ${people2} participants and want ${sparePacks} extra packs. How many packs should they prepare altogether?`,
+        packs1 * scale + sparePacks,
+        'Scale the required packs to the new number of participants, then add the spare packs.'
       );
     }
 
-    if (chance(0.5)) {
-      const k = randInt(3, 10);
-      const x1 = randInt(2, 4);
-      const x2 = x1 + randInt(1, 3);
-      const x3 = x2 + randInt(1, 3);
-      const targetX = x3 + randInt(1, 4);
+    const studentsPerTray = randInt(4, 8);
+    const slicesPerTray = randInt(8, 16);
+    const students = studentsPerTray * randInt(3, 6);
+    const absent = randInt(2, Math.min(8, students - 1));
+    const attending = students - absent;
+    const slicesPerStudent = slicesPerTray / studentsPerTray;
 
-      return psQ(
-        'proportion',
-        s,
-        `The table contains the pairs (${x1}, ${x1 * k}), (${x2}, ${x2 * k}) and (${x3}, ${x3 * k}). Assuming the same proportional relationship continues, what is y when x = ${targetX}?`,
-        targetX * k,
-        'Identify the constant ratio y ÷ x, then extend the table.'
-      );
-    }
-
-    const constant = pick([36, 48, 60, 72, 84, 96, 120]);
-    const divisors = [];
-
-    for (let value = 2; value <= 12; value++) {
-      if (constant % value === 0) divisors.push(value);
-    }
-
-    if (divisors.length < 4) return psGenProportion();
-
-    const shuffled = [...divisors].sort(() => Math.random() - 0.5);
-    const [x1, x2, x3, targetX] = shuffled.slice(0, 4);
+    if (!Number.isInteger(slicesPerStudent)) return psGenProportion();
 
     return psQ(
       'proportion',
       s,
-      `The table contains the pairs (${x1}, ${constant / x1}), (${x2}, ${constant / x2}) and (${x3}, ${constant / x3}). Assuming the same proportional relationship continues, what is y when x = ${targetX}?`,
-      constant / targetX,
-      'Recognise that x × y is constant, then use the inverse-proportion relationship.'
+      `A catering plan allows ${slicesPerTray} pizza slices for every ${studentsPerTray} students. Food was prepared for ${students} students, but ${absent} are absent. If the same allowance per student is kept, how many slices are actually needed?`,
+      attending * slicesPerStudent,
+      'Find the number of slices allowed per student, then multiply by the number attending.'
     );
   }
 
-  // 6. Building and using proportion formulas
+  // 6. Inverse proportion in travel, storage or resource allocation
   if (s === 'basic') {
-    const k = randInt(3, 12);
-    const x = randInt(2, 9);
+    const taps1 = randInt(2, 5);
+    const hours1 = randInt(4, 12);
+    const totalTapHours = taps1 * hours1;
+    const options = [2, 3, 4, 5, 6, 8, 10]
+      .filter(value => value !== taps1 && totalTapHours % value === 0);
+
+    if (!options.length) return psGenProportion();
+
+    const taps2 = pick(options);
 
     return psQ(
       'proportion',
       s,
-      `The quantity y is directly proportional to x and is modelled by y = kx. When x = ${x}, y = ${x * k}. What is the value of k?`,
-      k,
-      'For y = kx, divide y by x to find the constant of proportionality.'
+      `${taps1} identical taps fill a storage tank in ${hours1} hours. If ${taps2} identical taps are used instead, how long will the tank take to fill?`,
+      totalTapHours / taps2,
+      'For the same tank, the number of taps multiplied by the filling time stays constant.'
     );
   }
 
   if (s === 'multi') {
-    const k = randInt(3, 12);
-    const x1 = randInt(2, 8);
-    const x2 = randInt(x1 + 2, x1 + 10);
+    const vehicles1 = randInt(3, 6);
+    const trips1 = randInt(6, 12);
+    const totalVehicleTrips = vehicles1 * trips1;
+    const options = [2, 3, 4, 5, 6, 8, 9, 10, 12]
+      .filter(value => value !== vehicles1 && totalVehicleTrips % value === 0);
+
+    if (!options.length) return psGenProportion();
+
+    const vehicles2 = pick(options);
+    const loadingDelay = randInt(1, 3);
 
     return psQ(
       'proportion',
       s,
-      `A quantity y is directly proportional to x. When x = ${x1}, y = ${x1 * k}. Use a model of the form y = kx to calculate y when x = ${x2}.`,
-      x2 * k,
-      'First calculate k = y ÷ x, then substitute the new x-value into y = kx.'
+      `${vehicles1} identical trucks need ${trips1} trips each to move a pile of soil. If ${vehicles2} trucks share the same work equally, how many trips will each truck make, including ${loadingDelay} extra trips required because some soil is moved to a second site?`,
+      totalVehicleTrips / vehicles2 + loadingDelay,
+      'Find the total number of truck-trips for the original job, divide by the new number of trucks, then include the extra trips.'
     );
   }
 
-  const constant = pick([24, 36, 48, 60, 72, 84, 96, 120]);
-  const possibleX = [];
+  const pumps1 = randInt(3, 6);
+  const hours1 = randInt(8, 15);
+  const firstHours = randInt(2, hours1 - 3);
+  const totalPumpHours = pumps1 * hours1;
+  const remainingPumpHours = totalPumpHours - pumps1 * firstHours;
+  const finalHours = randInt(2, 6);
 
-  for (let value = 2; value <= 12; value++) {
-    if (constant % value === 0) possibleX.push(value);
+  if (remainingPumpHours % finalHours !== 0) return psGenProportion();
+
+  const pumps2 = remainingPumpHours / finalHours;
+
+  if (pumps2 < 2 || pumps2 > 15 || pumps2 === pumps1) {
+    return psGenProportion();
   }
-
-  if (possibleX.length < 2) return psGenProportion();
-
-  const x1 = pick(possibleX);
-  const remainingX = possibleX.filter(value => value !== x1);
-  const x2 = pick(remainingX);
-  const y1 = constant / x1;
-  const y2 = constant / x2;
 
   return psQ(
     'proportion',
     s,
-    `The quantity y is inversely proportional to x and is modelled by y = k/x. When x = ${x1}, y = ${y1}. Calculate x when y = ${y2}.`,
-    x2,
-    'Find k using x × y, then solve the inverse-proportion model for x.'
+    `${pumps1} identical pumps could empty a reservoir in ${hours1} hours. They work for ${firstHours} hours, after which the remaining water must be removed in ${finalHours} hours. How many identical pumps are needed for the second stage?`,
+    pumps2,
+    'Calculate the total pump-hours, subtract the first stage, then divide the remaining pump-hours by the required time.'
   );
 }
