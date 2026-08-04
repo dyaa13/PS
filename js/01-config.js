@@ -37,6 +37,9 @@ const YEAR_CONFIGS = {
       speedDistanceTime: 'Speed, Distance and Time',
       age: 'Age Problems',
       numberProblems: 'Number Problems',
+      calendarDayWeek: 'Calendar and Day-of-Week Problems',
+      orderingConstraints: 'Ordering and Constraint Problems',
+      transferExchange: 'Transfer and Exchange Problems',
       equations: 'Simple Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
       angleReasoning: 'Angle Reasoning',
@@ -50,7 +53,7 @@ const YEAR_CONFIGS = {
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
       'percentages', 'ratio', 'proportion', 'speedDistanceTime',
-      'age', 'numberProblems', 'equations', 'geometryMeasurement',
+      'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'equations', 'geometryMeasurement',
       'angleReasoning', 'coordinatesLines', 'sequences', 'statistics',
       'probability', 'logicConstraints'
     ],
@@ -79,6 +82,9 @@ const YEAR_CONFIGS = {
       workRate: 'Work Rate',
       age: 'Age Problems',
       numberProblems: 'Number Problems',
+      calendarDayWeek: 'Calendar and Day-of-Week Problems',
+      orderingConstraints: 'Ordering and Constraint Problems',
+      transferExchange: 'Transfer and Exchange Problems',
       equations: 'Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
       angleReasoning: 'Angle Reasoning',
@@ -94,7 +100,7 @@ const YEAR_CONFIGS = {
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
       'percentages', 'ratio', 'proportion', 'speedDistanceTime',
-      'workRate', 'age', 'numberProblems', 'equations',
+      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'equations',
       'geometryMeasurement', 'angleReasoning', 'pythagorasTrig',
       'coordinatesLines', 'sequences', 'statistics', 'probability',
       'logicConstraints', 'modelling'
@@ -124,6 +130,9 @@ const YEAR_CONFIGS = {
       workRate: 'Work Rate and Tanks',
       age: 'Age Problems',
       numberProblems: 'Number Problems',
+      calendarDayWeek: 'Calendar and Day-of-Week Problems',
+      orderingConstraints: 'Ordering and Constraint Problems',
+      transferExchange: 'Transfer and Exchange Problems',
       equations: 'Equation Problems',
       complexLinearEquations: 'Complex Linear Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
@@ -141,7 +150,7 @@ const YEAR_CONFIGS = {
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
       'percentages', 'ratio', 'proportion', 'speedDistanceTime',
-      'workRate', 'age', 'numberProblems', 'equations',
+      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'equations',
       'complexLinearEquations', 'geometryMeasurement', 'angleReasoning', 'pythagorasTrig',
       'coordinatesLines', 'sequences', 'statistics', 'probability',
       'logicConstraints', 'optimisation', 'modelling'

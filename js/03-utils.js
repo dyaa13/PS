@@ -246,14 +246,58 @@ function validateAnswer(raw, question) {
     && Math.abs(value - Number(question.answer)) < 1e-6;
 }
 
+const TWO_DECIMAL_INSTRUCTION = 'Give your answer to 2 decimal places.';
+
+function isWholeNumberValue(value) {
+  const number = Number(value);
+  return Number.isFinite(number)
+    && Math.abs(number - Math.round(number)) < 1e-8;
+}
+
+function roundStandardNumericAnswer(value) {
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return number;
+  }
+
+  return isWholeNumberValue(number)
+    ? Math.round(number)
+    : roundTo(number, 2);
+}
+
+function addTwoDecimalInstruction(text) {
+  const cleaned = String(text || '').trim();
+
+  if (/\b(?:Give your answer to|to) 2 decimal places\b/i.test(cleaned)) {
+    return cleaned;
+  }
+
+  return `${cleaned}${/[.!?]$/.test(cleaned) ? '' : '.'} ${TWO_DECIMAL_INSTRUCTION}`;
+}
+
+function standardNumericDisplay(value) {
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return String(value);
+  }
+
+  return isWholeNumberValue(number)
+    ? String(Math.round(number))
+    : roundStandardNumericAnswer(number).toFixed(2);
+}
+
 function q(skill, text, answer, hint) {
-  const rounded = roundTo(answer);
+  const rounded = roundStandardNumericAnswer(answer);
+  const needsTwoDecimals = Number.isFinite(rounded)
+    && !isWholeNumberValue(rounded);
 
   return {
     skill,
-    text,
+    text: needsTwoDecimals ? addTwoDecimalInstruction(text) : text,
     answer: rounded,
-    displayAnswer: fmt(rounded),
+    displayAnswer: standardNumericDisplay(rounded),
     answerType: 'number',
     hint
   };
@@ -273,6 +317,7 @@ function qFrac(skill, text, value, hint) {
     answer: rounded,
     displayAnswer: toFraction(value),
     answerType: 'number',
+    exactFraction: true,
     requireImproperFraction,
     hint: requireImproperFraction
       ? `${hint} Enter the final answer as an improper fraction, for example 7/4.`

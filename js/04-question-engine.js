@@ -15,6 +15,9 @@ const PROBLEM_BANKS = {
   workRate: psGenWorkRate,
   age: psGenAge,
   numberProblems: psGenNumberProblems,
+  calendarDayWeek: psGenCalendarDayWeek,
+  orderingConstraints: psGenOrderingConstraints,
+  transferExchange: psGenTransferExchange,
   equations: psGenEquations,
   complexLinearEquations: psGenComplexLinearEquations,
   geometryMeasurement: psGenGeometryMeasurement,
@@ -48,21 +51,35 @@ function currentLabels() {
 function normaliseQuestion(raw, fallbackSkill) {
   const skill = raw.skill || raw.operation || fallbackSkill;
   const answerType = raw.answerType || 'number';
+  const exactFraction = Boolean(raw.exactFraction || raw.requireImproperFraction);
+  const numericAnswer = Number(raw.answer);
   const answer = answerType === 'number'
-    ? roundTo(Number(raw.answer))
+    ? exactFraction
+      ? roundTo(numericAnswer)
+      : roundStandardNumericAnswer(numericAnswer)
     : String(raw.answer);
+  const needsTwoDecimals = answerType === 'number'
+    && !exactFraction
+    && Number.isFinite(answer)
+    && !isWholeNumberValue(answer);
+  const cleanText = cleanDisplayNumbers(raw.text);
 
   return {
     ...raw,
     skill,
-    text: cleanDisplayNumbers(raw.text),
+    text: needsTwoDecimals
+      ? addTwoDecimalInstruction(cleanText)
+      : cleanText,
     answer,
-    displayAnswer: raw.displayAnswer != null
+    displayAnswer: exactFraction && raw.displayAnswer != null
       ? cleanDisplayNumbers(raw.displayAnswer)
       : answerType === 'number'
-        ? fmt(answer)
-        : String(answer),
+        ? standardNumericDisplay(answer)
+        : raw.displayAnswer != null
+          ? cleanDisplayNumbers(raw.displayAnswer)
+          : String(answer),
     answerType,
+    exactFraction,
     hint: cleanDisplayNumbers(raw.hint || '')
   };
 }
@@ -98,6 +115,22 @@ function generatedQuestionIssues(question) {
     }
   } else if (!Number.isFinite(Number(question.answer))) {
     issues.push('Numeric answer is not finite.');
+  } else if (!question.exactFraction && !question.requireImproperFraction) {
+    const numericAnswer = Number(question.answer);
+
+    if (!isWholeNumberValue(numericAnswer)) {
+      if (roundTo(numericAnswer, 2) !== numericAnswer) {
+        issues.push('Non-integer answer is not rounded to 2 decimal places.');
+      }
+
+      if (!/\b(?:Give your answer to|to) 2 decimal places\b/i.test(question.text)) {
+        issues.push('Non-integer question is missing the 2-decimal-place instruction.');
+      }
+
+      if (String(question.displayAnswer) !== numericAnswer.toFixed(2)) {
+        issues.push('Non-integer displayed answer does not show 2 decimal places.');
+      }
+    }
   }
 
   const shownAnswer = displayCorrect(question);

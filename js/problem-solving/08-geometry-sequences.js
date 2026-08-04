@@ -531,138 +531,98 @@ function psGenGeometryMeasurement() {
 
 function psGenAngleReasoning() {
   const s = chooseProblemStructure();
-  const type = randInt(1, 6);
+  const type = randInt(1, 10);
 
-  // 1. Roof and frame angles
+  // 1. Angles on a straight line
   if (type === 1) {
     if (s === 'basic') {
-      const left = randInt(35, 70);
-      const right = randInt(35, 70);
+      const known = randInt(35, 145);
 
       return psQ(
         'angleReasoning',
         s,
-        `A triangular roof frame has base angles of ${left}° and ${right}°. What angle must be cut at the top joint?`,
-        180 - left - right,
-        'The three interior angles of the triangular frame total 180°.'
-      );
-    }
-
-    if (s === 'multi') {
-      const base = randInt(35, 70);
-      const top = 180 - 2 * base;
-
-      return psQ(
-        'angleReasoning',
-        s,
-        `An isosceles roof truss has two equal base angles. The angle at the top is ${top}°. What is the size of each base angle?`,
-        base,
-        'Subtract the top angle from 180°, then divide the remaining angle equally.'
-      );
-    }
-
-    const base = randInt(35, 70);
-    const exterior = 2 * base;
-
-    return psQ(
-      'angleReasoning',
-      s,
-      `At the top joint of an isosceles roof frame, an exterior angle measures ${exterior}°. The two base angles are equal. What is the size of each base angle?`,
-      base,
-      'The exterior angle equals the sum of the two opposite interior angles.'
-    );
-  }
-
-  // 2. Roads and straight lines
-  if (type === 2) {
-    if (s === 'basic') {
-      const branch = randInt(35, 145);
-
-      return psQ(
-        'angleReasoning',
-        s,
-        `A side road meets a straight highway. One angle at the junction is ${branch}°. What is the adjacent angle on the straight line?`,
-        180 - branch,
+        `A side road meets a straight highway. One angle at the junction is ${known}°. What is the adjacent angle on the straight line?`,
+        180 - known,
         'Adjacent angles on a straight line total 180°.'
       );
     }
 
     if (s === 'multi') {
-      const useEvenAngles = chance(0.5);
-      const angleSet = useEvenAngles
-        ? [30, 40, 50, 60, 70, 80]
-        : [35, 45, 55, 65, 75];
-      const first = pick(angleSet);
-      const second = pick(angleSet.filter(value => value !== first || angleSet.length === 1));
+      const first = randInt(25, 70);
+      const second = randInt(30, 85);
       const third = 180 - first - second;
-      if (third <= 0) return psGenAngleReasoning();
+      if (third <= 15) return psGenAngleReasoning();
 
       return psQ(
         'angleReasoning',
         s,
-        `Three roads form a triangular traffic island. Two interior angles are ${first}° and ${second}°. The third corner is divided into two equal turning angles. What is each turning angle?`,
-        third / 2,
-        'Find the third triangle angle, then divide it into two equal parts.'
+        `Three adjacent loading-bay lanes meet along the same straight boundary. Two of the angles are ${first}° and ${second}°. What is the third angle?`,
+        third,
+        'Add the two known adjacent angles, then subtract their total from 180°.'
       );
     }
 
-    const inside = randInt(40, 80);
-    const exterior = 180 - inside;
-    const secondInside = randInt(25, 70);
-    const missing = exterior - secondInside;
-    if (missing <= 0) return psGenAngleReasoning();
+    const ratio = pick([[1, 2], [1, 3], [2, 3], [2, 7], [3, 7], [4, 5]]);
+    const unit = 180 / (ratio[0] + ratio[1]);
 
     return psQ(
       'angleReasoning',
       s,
-      `At a triangular road junction, one exterior angle is ${exterior}°. One of the two opposite interior angles is ${secondInside}°. What is the other opposite interior angle?`,
-      missing,
-      'An exterior angle equals the sum of the two opposite interior angles.'
+      `A divider splits a straight angle into two adjacent angles in the ratio ${ratio[0]}:${ratio[1]}. What is the larger angle?`,
+      Math.max(ratio[0], ratio[1]) * unit,
+      'The two ratio parts together represent 180°. Find one part, then calculate the larger angle.'
     );
   }
 
-  // 3. Regular signs and frames
-  if (type === 3) {
+  // 2. Vertically opposite angles
+  if (type === 2) {
     if (s === 'basic') {
-      const sides = pick([4, 5, 6, 8, 9, 10, 12]);
-      const exterior = 360 / sides;
+      const known = randInt(30, 150);
 
       return psQ(
         'angleReasoning',
         s,
-        `A regular ${sides}-sided sign is made from equal panels. What is the turning angle between one side and the next?`,
-        exterior,
-        'The equal exterior angles of a regular polygon total 360°.'
+        `Two support bars cross. One angle at the crossing is ${known}°. What is the vertically opposite angle?`,
+        known,
+        'Vertically opposite angles are equal.'
       );
     }
 
     if (s === 'multi') {
-      const sides = pick([5, 6, 8, 9, 10, 12]);
-      const interior = ((sides - 2) * 180) / sides;
+      const whole = randInt(70, 145);
+      const part = randInt(20, whole - 20);
 
       return psQ(
         'angleReasoning',
         s,
-        `A regular ${sides}-sided decorative frame uses identical corner joints. What interior angle must each joint form?`,
-        interior,
-        'Find the polygon interior-angle sum, then divide equally among the corners.'
+        `Two beams cross, creating a ${whole}° angle. The vertically opposite angle is divided into two smaller angles. One is ${part}°. What is the other smaller angle?`,
+        whole - part,
+        'First use vertically opposite angles to copy the whole angle, then subtract the known part.'
       );
     }
 
-    const sides = pick([5, 6, 8, 9, 10, 12, 15]);
-    const exterior = 360 / sides;
+    const x = randInt(12, 35);
+    const firstCoefficient = randInt(2, 4);
+    const secondCoefficient = firstCoefficient + randInt(1, 3);
+    const firstConstant = randInt(4, 20);
+    const angle = firstCoefficient * x + firstConstant;
+    const secondConstant = angle - secondCoefficient * x;
+    if (angle <= 20 || angle >= 160 || secondConstant === 0) return psGenAngleReasoning();
+    const secondExpression = secondConstant > 0
+      ? `${secondCoefficient}x + ${secondConstant}`
+      : `${secondCoefficient}x − ${Math.abs(secondConstant)}`;
 
     return psQ(
       'angleReasoning',
       s,
-      `A designer knows that each exterior turn of a regular display frame is ${exterior}°. How many sides does the frame have?`,
-      sides,
-      'Divide 360° by one exterior angle.'
+      `At the crossing of two structural braces, one angle is labelled ${firstCoefficient}x + ${firstConstant} degrees and its vertically opposite angle is labelled ${secondExpression} degrees. What is the size of either angle?`,
+      angle,
+      'Vertically opposite angles are equal. Form an equation, solve for x, then calculate the angle.'
     );
   }
 
-  // 4. Tiles around a point
-  if (type === 4) {
+  // 3. Angles around a point
+  if (type === 3) {
     if (s === 'basic') {
       const pieces = pick([3, 4, 5, 6, 8, 9, 10, 12]);
 
@@ -676,37 +636,171 @@ function psGenAngleReasoning() {
     }
 
     if (s === 'multi') {
-      const equalPieces = pick([3, 4, 5, 6]);
-      const equalAngle = pick([30, 40, 45, 50, 60]);
-      const used = equalPieces * equalAngle;
-      if (used >= 360) return psGenAngleReasoning();
+      const first = randInt(45, 110);
+      const second = randInt(40, 100);
+      const third = randInt(35, 95);
+      const missing = 360 - first - second - third;
+      if (missing <= 20 || missing >= 170) return psGenAngleReasoning();
 
       return psQ(
         'angleReasoning',
         s,
-        `${equalPieces} identical tiles, each with angle ${equalAngle}°, meet at a point. One final tile fills the remaining gap. What angle is needed on the final tile?`,
-        360 - used,
-        'Subtract the total angle already used from 360°.'
+        `Four paths meet at a central marker. Three of the angles are ${first}°, ${second}° and ${third}°. What is the fourth angle?`,
+        missing,
+        'Add the three known angles and subtract their total from 360°.'
       );
     }
 
-    const smallAngle = pick([30, 40, 45, 60]);
-    const largeAngle = pick([90, 120, 135]);
-    const smallCount = randInt(2, 5);
-    const remaining = 360 - smallCount * smallAngle;
-    if (remaining <= 0 || remaining % largeAngle !== 0) return psGenAngleReasoning();
+    const ratio = pick([[1, 2, 3, 4], [2, 3, 4, 6], [1, 3, 4, 7], [2, 4, 5, 7]]);
+    const sum = ratio.reduce((total, value) => total + value, 0);
+    const unit = 360 / sum;
 
     return psQ(
       'angleReasoning',
       s,
-      `${smallCount} small tiles, each with angle ${smallAngle}°, are placed around a point. The remaining space is filled with identical tiles having angle ${largeAngle}°. How many of the larger tiles are needed?`,
-      remaining / largeAngle,
-      'Subtract the angles used by the small tiles, then divide the remaining angle by the larger tile angle.'
+      `Four garden sections meet at one point. Their angles are in the ratio ${ratio.join(':')}. What is the largest angle?`,
+      Math.max(...ratio) * unit,
+      'The ratio represents all 360° around the point. Find one ratio part, then calculate the largest section.'
     );
   }
 
-  // 5. Parallel structures
+  // 4. Triangle interior angles
+  if (type === 4) {
+    if (s === 'basic') {
+      const first = randInt(35, 75);
+      const second = randInt(35, 75);
+      const third = 180 - first - second;
+      if (third <= 20) return psGenAngleReasoning();
+
+      return psQ(
+        'angleReasoning',
+        s,
+        `A triangular roof frame has two interior angles of ${first}° and ${second}°. What is the third interior angle?`,
+        third,
+        'The three interior angles of a triangle total 180°.'
+      );
+    }
+
+    if (s === 'multi') {
+      const smaller = randInt(30, 55);
+      const difference = pick([10, 15, 20, 25]);
+      const larger = smaller + difference;
+      const third = 180 - smaller - larger;
+      if (third <= 25) return psGenAngleReasoning();
+
+      return psQ(
+        'angleReasoning',
+        s,
+        `In a triangular display stand, one angle is ${difference}° larger than a second angle. The third angle is ${third}°. What is the larger of the first two angles?`,
+        larger,
+        'Subtract the known third angle from 180°, then split the remainder into two angles with the stated difference.'
+      );
+    }
+
+    const first = randInt(25, 35);
+    const firstDifference = randInt(8, 16);
+    const second = first + firstDifference;
+    const third = 180 - first - second;
+    const secondDifference = third - second;
+    if (secondDifference <= 10) return psGenAngleReasoning();
+
+    return psQ(
+      'angleReasoning',
+      s,
+      `The three angles of a triangular frame follow these rules: the second angle is ${firstDifference}° larger than the first, and the third angle is ${secondDifference}° larger than the second. What is the largest angle?`,
+      third,
+      'Represent the first angle with a variable, use the two stated differences, and make the three angles total 180°.'
+    );
+  }
+
+  // 5. Quadrilateral interior angles
   if (type === 5) {
+    if (s === 'basic') {
+      const first = randInt(70, 115);
+      const second = randInt(70, 115);
+      const third = randInt(70, 115);
+      const fourth = 360 - first - second - third;
+      if (fourth <= 30 || fourth >= 160) return psGenAngleReasoning();
+
+      return psQ(
+        'angleReasoning',
+        s,
+        `A four-sided courtyard has three interior angles of ${first}°, ${second}° and ${third}°. What is the fourth interior angle?`,
+        fourth,
+        'The interior angles of a quadrilateral total 360°.'
+      );
+    }
+
+    if (s === 'multi') {
+      const first = randInt(65, 105);
+      const second = randInt(65, 105);
+      const equal = (360 - first - second) / 2;
+      if (!Number.isInteger(equal) || equal <= 35 || equal >= 145) return psGenAngleReasoning();
+
+      return psQ(
+        'angleReasoning',
+        s,
+        `A kite-shaped frame has two equal interior angles. The other two interior angles are ${first}° and ${second}°. What is the size of each equal angle?`,
+        equal,
+        'Subtract the two known angles from 360°, then divide the remainder equally.'
+      );
+    }
+
+    const x = randInt(40, 58);
+    const difference = pick([10, 20, 30]);
+    const fixed = 360 - (x + (x + difference) + 2 * x);
+    if (fixed <= 35 || fixed >= 145) return psGenAngleReasoning();
+
+    return psQ(
+      'angleReasoning',
+      s,
+      `A four-sided display has interior angles described as x°, (x + ${difference})°, 2x° and ${fixed}°. What is its largest interior angle?`,
+      Math.max(x, x + difference, 2 * x, fixed),
+      'Use the 360° quadrilateral angle sum to solve for x, then compare the four angles.'
+    );
+  }
+
+  // 6. Polygon interior angles
+  if (type === 6) {
+    if (s === 'basic') {
+      const sides = pick([5, 6, 7, 8, 9, 10, 12]);
+
+      return psQ(
+        'angleReasoning',
+        s,
+        `A ${sides}-sided display frame is divided into triangles from one corner. What is the total of its interior angles?`,
+        (sides - 2) * 180,
+        'An n-sided polygon has an interior-angle sum of (n − 2) × 180°.'
+      );
+    }
+
+    if (s === 'multi') {
+      const sides = pick([5, 6, 8, 9, 10, 12]);
+      const interior = ((sides - 2) * 180) / sides;
+
+      return psQ(
+        'angleReasoning',
+        s,
+        `A regular ${sides}-sided sign uses identical corner joints. What interior angle must each joint form?`,
+        interior,
+        'Find the total interior-angle sum, then divide equally among the corners.'
+      );
+    }
+
+    const sides = pick([5, 6, 7, 8, 9, 10, 12]);
+    const total = (sides - 2) * 180;
+
+    return psQ(
+      'angleReasoning',
+      s,
+      `The interior angles of a display frame total ${total}°. The frame has at least five sides. How many sides does it have?`,
+      sides,
+      'Reverse the polygon angle-sum rule: divide by 180°, then add 2.'
+    );
+  }
+
+  // 7. Angles in parallel lines
+  if (type === 7) {
     if (s === 'basic') {
       const angle = randInt(35, 75);
 
@@ -721,325 +815,547 @@ function psGenAngleReasoning() {
 
     if (s === 'multi') {
       const acute = randInt(35, 75);
-      const obtuse = 180 - acute;
 
       return psQ(
         'angleReasoning',
         s,
-        `A diagonal brace crosses two parallel beams. It forms an acute angle of ${acute}° with the lower beam. What obtuse angle does it form with the upper beam on the same side?`,
-        obtuse,
-        'The acute corresponding angle is equal, and the adjacent obtuse angle is supplementary.'
+        `A diagonal brace crosses two parallel beams. It forms an acute angle of ${acute}° with the lower beam. What obtuse angle does it form with the upper beam on the same side of the brace?`,
+        180 - acute,
+        'Use the equal corresponding angle, then find its supplementary adjacent angle.'
       );
     }
 
     const first = randInt(30, 70);
-    const second = randInt(20, 60);
+    const second = randInt(25, 65);
     const missing = 180 - first - second;
+    if (missing <= 20) return psGenAngleReasoning();
 
     return psQ(
       'angleReasoning',
       s,
-      `A zigzag support crosses two parallel beams and forms two known angles of ${first}° and ${second}° inside a triangular section. What is the remaining angle in that section?`,
+      `Two parallel beams are crossed by two braces that meet between them, forming a triangle. One brace makes an angle of ${first}° with the upper beam, and the other makes an angle of ${second}° with the lower beam. Using alternate interior angles, what is the angle where the two braces meet?`,
       missing,
-      'Use parallel-line angle relationships to place the known angles in one triangle, then use the triangle angle sum.'
+      'Transfer both given angles into the triangle using parallel-line relationships, then use the triangle angle sum.'
     );
   }
 
-  // 6. Choosing a feasible design
-  if (s === 'basic') {
-    const equal = randInt(35, 75);
-    const third = 180 - 2 * equal;
-
-    return psQ(
-      'angleReasoning',
-      s,
-      `A symmetric triangular bracket has two equal angles of ${equal}°. What is the angle between the two equal sides?`,
-      third,
-      'Subtract the two equal angles from 180°.'
-    );
-  }
-
-  if (s === 'multi') {
-    const sides = pick([5, 6, 8, 9, 10, 12]);
-    const diagonalsFromOneVertex = sides - 3;
-
-    return psQ(
-      'angleReasoning',
-      s,
-      `A designer divides a ${sides}-sided window frame into triangles by drawing supports from one corner to every non-adjacent corner. How many supports are drawn from that corner?`,
-      diagonalsFromOneVertex,
-      'From one vertex, connections cannot be made to itself or its two adjacent vertices.'
-    );
-  }
-
-  const sides = pick([5, 6, 8, 9, 10, 12]);
-  const total = (sides - 2) * 180;
-  const knownAngle = total / sides;
-
-  return psQ(
-    'angleReasoning',
-    s,
-    `A regular ${sides}-sided frame is assembled from identical corner pieces. The total of all interior angles is ${total}°. What angle must each corner piece provide?`,
-    knownAngle,
-    'Because the frame is regular, divide the total interior angle sum equally among all corners.'
-  );
-}
-
-function psGenPythagorasTrig() {
-  const s = chooseProblemStructure();
-  const type = randInt(1, 6);
-  const triple = pick([[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [7, 24, 25], [9, 12, 15]]);
-
-  // 1. Ladders and access
-  if (type === 1) {
+  // 8. Exterior angles
+  if (type === 8) {
     if (s === 'basic') {
-      const scale = randInt(1, 4);
+      const interior = randInt(35, 145);
 
       return psQ(
-        'pythagorasTrig',
+        'angleReasoning',
         s,
-        `A ladder reaches ${triple[1] * scale} m up a wall. Its foot is ${triple[0] * scale} m from the wall. How long is the ladder?`,
-        triple[2] * scale,
-        'The wall and ground form the perpendicular sides of a right triangle.'
+        `At one corner of a triangular sign, the interior angle is ${interior}°. What is the adjacent exterior angle on the extended side?`,
+        180 - interior,
+        'An interior angle and its adjacent exterior angle form a straight line.'
       );
     }
 
     if (s === 'multi') {
+      const sides = pick([4, 5, 6, 8, 9, 10, 12, 15]);
+      const exterior = 360 / sides;
+
+      return psQ(
+        'angleReasoning',
+        s,
+        `Each exterior turning angle of a regular frame is ${exterior}°. How many sides does the frame have?`,
+        sides,
+        'The exterior angles of a polygon total 360°. Divide 360° by one exterior angle.'
+      );
+    }
+
+    const known = [randInt(45, 90), randInt(45, 90), randInt(45, 90), randInt(45, 90)];
+    const missingExterior = 360 - known.reduce((total, value) => total + value, 0);
+    if (missingExterior <= 20 || missingExterior >= 150) return psGenAngleReasoning();
+
+    return psQ(
+      'angleReasoning',
+      s,
+      `A five-sided walking route has exterior turning angles of ${known[0]}°, ${known[1]}°, ${known[2]}°, ${known[3]}° and one unknown angle. What is the interior angle at the corner with the unknown exterior angle?`,
+      180 - missingExterior,
+      'First use the 360° exterior-angle sum to find the missing exterior angle, then subtract it from 180°.'
+    );
+  }
+
+  // 9. Isosceles triangles
+  if (type === 9) {
+    if (s === 'basic') {
+      const apex = pick([20, 30, 40, 50, 60, 70, 80]);
+
+      return psQ(
+        'angleReasoning',
+        s,
+        `An isosceles roof truss has a top angle of ${apex}°. What is the size of each equal base angle?`,
+        (180 - apex) / 2,
+        'Subtract the top angle from 180°, then divide the remainder equally.'
+      );
+    }
+
+    if (s === 'multi') {
+      const base = randInt(40, 75);
+      const exterior = 180 - base;
+      const apex = 180 - 2 * base;
+
+      return psQ(
+        'angleReasoning',
+        s,
+        `At one base corner of an isosceles triangular frame, the exterior angle is ${exterior}°. What is the angle at the top of the frame?`,
+        apex,
+        'Find the adjacent base interior angle, copy it to the other base, then subtract both from 180°.'
+      );
+    }
+
+    const ratio = pick([[2, 1], [4, 1], [5, 2], [7, 4]]);
+    const unit = 180 / (2 * ratio[0] + ratio[1]);
+    const base = ratio[0] * unit;
+    const apex = ratio[1] * unit;
+
+    return psQ(
+      'angleReasoning',
+      s,
+      `In an isosceles triangular support, each base angle and the top angle are in the ratio ${ratio[0]}:${ratio[1]}. What is the top angle?`,
+      apex,
+      'There are two equal base-angle parts and one top-angle part. Make their total 180°.'
+    );
+  }
+
+  // 10. Shape division and multi-step angle reasoning
+  if (s === 'basic') {
+    const a = randInt(35, 70);
+    const b = randInt(35, 70);
+    const c = randInt(30, 65);
+    const d = randInt(30, 65);
+    const corner = (180 - a - b) + (180 - c - d);
+    if (corner <= 25 || corner >= 170) return psGenAngleReasoning();
+
+    return psQ(
+      'angleReasoning',
+      s,
+      `A diagonal divides a four-sided frame into two triangles. At one shared corner, the two triangle angles combine to form the full corner angle. In the first triangle, the other two angles are ${a}° and ${b}°. In the second triangle, the other two angles are ${c}° and ${d}°. What is the full angle at the shared corner?`,
+      corner,
+      'Find the missing angle in each triangle, then add the two angles at the shared corner.'
+    );
+  }
+
+  if (s === 'multi') {
+    const first = randInt(35, 70);
+    const second = randInt(35, 70);
+    const third = 180 - first - second;
+    const exterior = 180 - third;
+
+    return psQ(
+      'angleReasoning',
+      s,
+      `A triangular section of a frame has two interior angles of ${first}° and ${second}°. At the third corner, the side is extended to form an exterior angle. What is that exterior angle?`,
+      exterior,
+      'Find the third interior angle, then subtract it from 180° to obtain the exterior angle.'
+    );
+  }
+
+  const crossing = randInt(45, 95);
+  const second = randInt(30, 70);
+  const thirdInterior = 180 - crossing - second;
+  if (thirdInterior <= 20) return psGenAngleReasoning();
+  const exterior = 180 - thirdInterior;
+
+  return psQ(
+    'angleReasoning',
+    s,
+    `Two support bars cross inside a triangular frame. One angle at the crossing is ${crossing}°. Its vertically opposite angle lies inside the triangle. A second interior angle of the triangle is ${second}°. At the third vertex, the interior angle and an exterior angle form a straight line. What is the exterior angle?`,
+    exterior,
+    'Use vertically opposite angles, then the triangle angle sum, and finally the straight-line angle rule.'
+  );
+}
+function psGenPythagorasTrig() {
+  const s = chooseProblemStructure();
+  const type = randInt(1, 7);
+  const rightTriples = [
+    [3, 4, 5],
+    [5, 12, 13],
+    [6, 8, 10],
+    [8, 15, 17],
+    [7, 24, 25],
+    [9, 12, 15]
+  ];
+  const degreeAngles = [20, 25, 30, 35, 40, 45, 50, 55, 60];
+  const twoDp = value => roundTo(value, 2);
+  const toRadians = degrees => degrees * Math.PI / 180;
+  const toDegrees = radians => radians * 180 / Math.PI;
+
+  // 1. Find a missing side in a right triangle
+  if (type === 1) {
+    if (s === 'basic') {
+      const triple = pick(rightTriples);
       const scale = randInt(1, 4);
-      const ladder = triple[2] * scale;
-      const height = triple[1] * scale;
-      const extra = randInt(1, 4);
+
+      if (chance(0.5)) {
+        return psQ(
+          'pythagorasTrig',
+          s,
+          `A rectangular safety frame is ${triple[0] * scale} m wide and ${triple[1] * scale} m high. What is the length of its diagonal brace?`,
+          triple[2] * scale,
+          'Treat the width and height as the perpendicular sides and use Pythagoras.'
+        );
+      }
 
       return psQ(
         'pythagorasTrig',
         s,
-        `A ${ladder} m ladder reaches ${height} m up a wall. Safety rules require the foot to be moved ${extra} m farther from the wall than its current distance. What will the new horizontal distance from the wall be?`,
-        triple[0] * scale + extra,
-        'Use Pythagoras to find the current horizontal distance, then add the required movement.'
+        `A support cable is ${triple[2] * scale} m long and reaches the top of a vertical post. Its ground anchor is ${triple[0] * scale} m from the post. How high is the post?`,
+        triple[1] * scale,
+        'The cable is the hypotenuse. Use Pythagoras to find the missing vertical side.'
       );
     }
 
-    const scale = randInt(1, 4);
-    const ladder = triple[2] * scale;
-    const height = triple[1] * scale;
-    const currentDistance = triple[0] * scale;
-    const maximumDistance = currentDistance + randInt(1, 4);
+    if (s === 'multi') {
+      const width = randInt(5, 14);
+      const height = randInt(6, 16);
+      const diagonal = twoDp(Math.sqrt(width ** 2 + height ** 2));
+      const costPerMetre = randInt(6, 15);
+      const cost = twoDp(diagonal * costPerMetre);
+
+      return psQ(
+        'pythagorasTrig',
+        s,
+        `A rectangular display frame is ${width} m wide and ${height} m high. A diagonal support is fitted from one corner to the opposite corner and costs $${costPerMetre} per metre. What is the cost of the support, to 2 decimal places? You may use a calculator.`,
+        cost,
+        'Find the diagonal using Pythagoras, multiply by the cost per metre, then round the final cost to 2 decimal places.'
+      );
+    }
+
+    const cable = randInt(12, 24);
+    const height = randInt(5, cable - 3);
+    const requiredDistance = twoDp(Math.sqrt(cable ** 2 - height ** 2));
+    const availableDistance = requiredDistance + pick([-2.5, -1.5, 1.5, 2.5, 3.5]);
+
+    if (availableDistance <= 0) return psGenPythagorasTrig();
 
     return psQ(
       'pythagorasTrig',
       s,
-      `A ${ladder} m ladder reaches a window ${height} m above the ground. The safety zone allows the foot of the ladder to be at most ${maximumDistance} m from the wall. How many metres of spare horizontal space remain beyond the required ladder position?`,
-      maximumDistance - currentDistance,
-      'Find the required horizontal distance using Pythagoras, then compare it with the allowed space.'
+      `A ${cable} m support cable must reach a point ${height} m up a pole. The ground anchor may be placed at most ${twoDp(availableDistance)} m from the pole. By how many metres is the available distance greater than or less than the required distance? Enter a positive number if there is spare distance and a negative number if the site is too short. Give your answer to 2 decimal places. You may use a calculator.`,
+      twoDp(availableDistance - requiredDistance),
+      'Use Pythagoras to find the required horizontal distance, then subtract it from the available distance.'
     );
   }
 
-  // 2. Shortcuts across rectangles
+  // 2. Test whether side lengths form a right triangle
   if (type === 2) {
     if (s === 'basic') {
-      const scale = randInt(1, 5);
+      const triple = pick(rightTriples);
+      const scale = randInt(1, 3);
+      const isRight = chance(0.6);
+      const longest = isRight
+        ? triple[2] * scale
+        : triple[2] * scale + pick([1, 2, 3]);
 
       return psQ(
         'pythagorasTrig',
         s,
-        `A rectangular park is ${triple[0] * scale} m by ${triple[1] * scale} m. How long is a straight path from one corner to the opposite corner?`,
+        `A triangular frame has side lengths ${triple[0] * scale} m, ${triple[1] * scale} m and ${longest} m. Does it contain a right angle? Enter 1 for Yes or 0 for No.`,
+        isRight ? 1 : 0,
+        'Square the longest side and compare it with the sum of the squares of the other two sides.'
+      );
+    }
+
+    if (s === 'multi') {
+      const triple = pick(rightTriples);
+      const scale = randInt(1, 3);
+      const correct = [triple[0] * scale, triple[1] * scale, triple[2] * scale];
+      const wrong1 = [correct[0], correct[1], correct[2] + 2];
+      const wrong2 = [correct[0] + 1, correct[1], correct[2]];
+      const options = [correct, wrong1, wrong2].sort(() => Math.random() - 0.5);
+      const correctOption = options.findIndex(option =>
+        option[0] ** 2 + option[1] ** 2 === option[2] ** 2
+      ) + 1;
+
+      return psQ(
+        'pythagorasTrig',
+        s,
+        `A builder must choose a triangular brace that contains a right angle. Option 1 has side lengths ${options[0].join(', ')} m. Option 2 has side lengths ${options[1].join(', ')} m. Option 3 has side lengths ${options[2].join(', ')} m. Which option should be chosen? Enter 1, 2 or 3.`,
+        correctOption,
+        'Test each set by comparing the square of its longest side with the sum of the other two squares.'
+      );
+    }
+
+    const candidateSets = [
+      [6, 8, 10],
+      [7, 9, 12],
+      [9, 12, 15],
+      [8, 10, 13]
+    ];
+    const maximumPerimeter = pick([28, 32, 38, 42]);
+    const usableCount = candidateSets.filter(set => {
+      const [a, b, c] = set;
+      return a ** 2 + b ** 2 === c ** 2
+        && a + b + c <= maximumPerimeter;
+    }).length;
+
+    return psQ(
+      'pythagorasTrig',
+      s,
+      `A workshop has four triangular frame designs with side lengths 6, 8, 10 m; 7, 9, 12 m; 9, 12, 15 m; and 8, 10, 13 m. A design is usable only if it contains a right angle and its perimeter is no more than ${maximumPerimeter} m. How many designs are usable?`,
+      usableCount,
+      'First test each design using the converse of Pythagoras, then apply the perimeter limit.'
+    );
+  }
+
+  // 3. Ladders, ramps and diagonals
+  if (type === 3) {
+    if (s === 'basic') {
+      const triple = pick(rightTriples);
+      const scale = randInt(1, 4);
+      const context = pick(['ladder', 'ramp', 'diagonal path']);
+
+      if (context === 'ladder') {
+        return psQ(
+          'pythagorasTrig',
+          s,
+          `A ladder reaches ${triple[1] * scale} m up a wall and its foot is ${triple[0] * scale} m from the wall. How long is the ladder?`,
+          triple[2] * scale,
+          'The wall and ground form the perpendicular sides of a right triangle.'
+        );
+      }
+
+      if (context === 'ramp') {
+        return psQ(
+          'pythagorasTrig',
+          s,
+          `A ramp rises ${triple[0] * scale} m over a horizontal distance of ${triple[1] * scale} m. What is the sloping length of the ramp?`,
+          triple[2] * scale,
+          'Use the rise and horizontal run as the perpendicular sides.'
+        );
+      }
+
+      return psQ(
+        'pythagorasTrig',
+        s,
+        `A rectangular park is ${triple[0] * scale} m by ${triple[1] * scale} m. How long is the diagonal path between opposite corners?`,
         triple[2] * scale,
         'The diagonal is the hypotenuse of a right triangle.'
       );
     }
 
     if (s === 'multi') {
-      const scale = randInt(1, 4);
-      const around = (triple[0] + triple[1]) * scale;
-      const diagonal = triple[2] * scale;
+      const rise = randInt(2, 7);
+      const run = randInt(6, 15);
+      const rampLength = twoDp(Math.sqrt(rise ** 2 + run ** 2));
+      const width = pick([1.2, 1.5, 1.8, 2]);
+      const surfaceArea = twoDp(rampLength * width);
 
       return psQ(
         'pythagorasTrig',
         s,
-        `To cross a rectangular field measuring ${triple[0] * scale} m by ${triple[1] * scale} m, a person can walk along two sides or take a diagonal path. How many metres shorter is the diagonal route?`,
-        around - diagonal,
-        'Find the two-side route and the diagonal, then compare them.'
+        `A loading ramp rises ${rise} m over a horizontal run of ${run} m. The ramp is ${width} m wide. What area of non-slip material is needed, to 2 decimal places? You may use a calculator.`,
+        surfaceArea,
+        'Find the sloping ramp length using Pythagoras, then multiply by the width.'
       );
     }
 
-    const scale = randInt(1, 4);
-    const diagonal = triple[2] * scale;
-    const costPerMetre = randInt(5, 12);
-    const budget = diagonal * costPerMetre + randInt(20, 80);
+    const ladderLength = randInt(8, 16);
+    const wallHeight = randInt(4, ladderLength - 2);
+    const groundDistance = Math.sqrt(ladderLength ** 2 - wallHeight ** 2);
+    const angle = twoDp(toDegrees(Math.atan(wallHeight / groundDistance)));
+    const minimumAngle = pick([65, 68, 70, 72, 75]);
 
     return psQ(
       'pythagorasTrig',
       s,
-      `A cable is laid diagonally across a ${triple[0] * scale} m by ${triple[1] * scale} m rectangular site. Cable costs $${costPerMetre} per metre and the budget is $${budget}. How much money remains after buying the required cable?`,
-      budget - diagonal * costPerMetre,
-      'Find the diagonal cable length, calculate its cost, then subtract from the budget.'
+      `A ${ladderLength} m ladder reaches ${wallHeight} m up a wall. Safety guidance requires the ladder angle with the ground to be at least ${minimumAngle}°. Calculate the actual angle and enter 1 if the ladder meets the rule or 0 if it does not. You may use a calculator.`,
+      angle >= minimumAngle ? 1 : 0,
+      'Find the ground distance using Pythagoras, then use an inverse trigonometric ratio to find the ladder angle.'
     );
   }
 
-  // 3. Support cables and poles
-  if (type === 3) {
-    if (s === 'basic') {
-      const scale = randInt(1, 4);
-
-      return psQ(
-        'pythagorasTrig',
-        s,
-        `A support cable is ${triple[2] * scale} m long and is anchored ${triple[0] * scale} m from the base of a vertical pole. How high up the pole is the cable attached?`,
-        triple[1] * scale,
-        'Use the cable as the hypotenuse and subtract the square of the ground distance.'
-      );
-    }
-
-    if (s === 'multi') {
-      const height = pick([5, 6, 8, 10, 12, 15]);
-      const cables = randInt(2, 5);
-
-      return psQ(
-        'pythagorasTrig',
-        s,
-        `Each of ${cables} identical support cables is anchored ${height} m from a pole and attached ${height} m above the ground, forming a 45° angle with the ground. What is the total horizontal ground distance from all anchors to their poles?`,
-        cables * height,
-        'In a 45° right triangle, the horizontal and vertical distances are equal.'
-      );
-    }
-
-    const height = pick([6, 8, 10, 12, 15]);
-    const groundDistance = height;
-    const boundary = groundDistance + randInt(2, 6);
-
-    return psQ(
-      'pythagorasTrig',
-      s,
-      `A cable attached to the top of a ${height} m pole makes a 45° angle with level ground. The site boundary is ${boundary} m from the pole. How many metres inside the boundary should the anchor be placed?`,
-      boundary - groundDistance,
-      'A 45° cable gives equal vertical and horizontal distances, then compare with the boundary distance.'
-    );
-  }
-
-  // 4. Ramps and slopes using Pythagorean triples
+  // 4. Height and horizontal distance
   if (type === 4) {
-    const rampTriple = pick([[3, 4, 5], [5, 12, 13], [6, 8, 10]]);
-
     if (s === 'basic') {
-      const scale = randInt(1, 3);
+      const horizontal = randInt(6, 18);
+      const sloping = randInt(horizontal + 2, horizontal + 12);
+      const height = twoDp(Math.sqrt(sloping ** 2 - horizontal ** 2));
 
       return psQ(
         'pythagorasTrig',
         s,
-        `A loading ramp rises ${rampTriple[0] * scale} m over a horizontal distance of ${rampTriple[1] * scale} m. What is the ramp length?`,
-        rampTriple[2] * scale,
-        'The rise and horizontal run are perpendicular sides of a right triangle.'
+        `A guy wire is ${sloping} m long and is anchored ${horizontal} m from the base of a vertical pole. How high up the pole is it attached? Give your answer to 2 decimal places. You may use a calculator.`,
+        height,
+        'Use the wire as the hypotenuse and find the missing vertical side.'
       );
     }
 
     if (s === 'multi') {
-      const scale = randInt(1, 3);
-      const rampLength = rampTriple[2] * scale;
-      const width = randInt(2, 5);
+      const east = randInt(5, 16);
+      const north = randInt(5, 16);
+      const direct = twoDp(Math.sqrt(east ** 2 + north ** 2));
+      const route = east + north;
+      const saving = twoDp(route - direct);
 
       return psQ(
         'pythagorasTrig',
         s,
-        `A ramp rises ${rampTriple[0] * scale} m over a horizontal run of ${rampTriple[1] * scale} m. The ramp is ${width} m wide. What rectangular surface area must be covered with non-slip material?`,
-        rampLength * width,
-        'Find the sloping ramp length using Pythagoras, then multiply by the ramp width.'
+        `A surveyor walks ${east} km east and then ${north} km north. How many kilometres shorter would a direct return route be than retracing the two legs? Give your answer to 2 decimal places. You may use a calculator.`,
+        saving,
+        'Find the direct distance with Pythagoras, then compare it with the two-leg route.'
       );
     }
 
-    const scale = randInt(1, 3);
-    const rampLength = rampTriple[2] * scale;
-    const maximumLength = rampLength + randInt(1, 5);
+    const cliffHeight = randInt(18, 45);
+    const safeCable = randInt(cliffHeight + 5, cliffHeight + 25);
+    const requiredHorizontal = twoDp(Math.sqrt(safeCable ** 2 - cliffHeight ** 2));
+    const boundary = twoDp(requiredHorizontal + pick([-3, -2, 2, 3, 4]));
+
+    if (boundary <= 0) return psGenPythagorasTrig();
 
     return psQ(
       'pythagorasTrig',
       s,
-      `A ramp must rise ${rampTriple[0] * scale} m across a horizontal run of ${rampTriple[1] * scale} m. The available ramp panel is ${maximumLength} m long. How much panel length will remain unused?`,
-      maximumLength - rampLength,
-      'Calculate the required sloping length, then subtract it from the available panel length.'
+      `A safety cable of length ${safeCable} m must reach from the top of a ${cliffHeight} m vertical face to a ground anchor. The site boundary is ${boundary} m from the base. By how many metres does the boundary exceed or fall short of the required horizontal distance? Enter a positive value for spare space or a negative value for a shortage. Give your answer to 2 decimal places. You may use a calculator.`,
+      twoDp(boundary - requiredHorizontal),
+      'Use Pythagoras to find the required ground distance, then compare it with the boundary.'
     );
   }
 
-  // 5. Navigation on a grid
+  // 5. Angles of elevation and depression
   if (type === 5) {
     if (s === 'basic') {
-      const scale = randInt(1, 5);
+      const distance = randInt(8, 30);
+      const angle = pick([25, 30, 35, 40, 45, 50]);
+      const eyeHeight = pick([1.4, 1.5, 1.6, 1.7]);
+      const height = twoDp(distance * Math.tan(toRadians(angle)) + eyeHeight);
 
       return psQ(
         'pythagorasTrig',
         s,
-        `A rescue team travels ${triple[0] * scale} km east and ${triple[1] * scale} km north. How far is it in a straight line from its starting point?`,
-        triple[2] * scale,
-        'The east and north distances form perpendicular sides.'
+        `A student stands ${distance} m from a tree. The angle of elevation from an eye height of ${eyeHeight} m to the top is ${angle}°. What is the total height of the tree, to 2 decimal places? You may use a calculator.`,
+        height,
+        'Use tangent to find the height above eye level, then add the eye height.'
       );
     }
 
     if (s === 'multi') {
-      const scale = randInt(1, 4);
-      const direct = triple[2] * scale;
-      const travelled = (triple[0] + triple[1]) * scale;
+      const height = randInt(18, 50);
+      const angle = pick([20, 25, 30, 35, 40, 45]);
+      const distance = twoDp(height / Math.tan(toRadians(angle)));
 
       return psQ(
         'pythagorasTrig',
         s,
-        `A surveyor walks ${triple[0] * scale} km east and then ${triple[1] * scale} km north. How many kilometres longer is this route than the straight-line distance back to the start?`,
-        travelled - direct,
-        'Compare the two-leg route with the Pythagorean straight-line distance.'
+        `From the top of a ${height} m lighthouse, the angle of depression to a boat is ${angle}°. How far is the boat horizontally from the base of the lighthouse? Give your answer to 2 decimal places. You may use a calculator.`,
+        distance,
+        'The angle of depression equals the angle of elevation from the boat. Use tangent with the lighthouse height.'
       );
     }
 
-    const scale = randInt(1, 4);
-    const direct = triple[2] * scale;
-    const fuelPerKm = randInt(2, 6);
-    const fuelAvailable = direct * fuelPerKm + randInt(5, 25);
+    const towerHeight = randInt(25, 60);
+    const nearDistance = randInt(15, 35);
+    const farDistance = nearDistance + randInt(8, 25);
+    const nearAngle = twoDp(toDegrees(Math.atan(towerHeight / nearDistance)));
+    const farAngle = twoDp(toDegrees(Math.atan(towerHeight / farDistance)));
 
     return psQ(
       'pythagorasTrig',
       s,
-      `A drone is ${triple[0] * scale} km east and ${triple[1] * scale} km north of its base. It uses ${fuelPerKm} units of battery per kilometre on a direct return flight and has ${fuelAvailable} units remaining. How many battery units will remain after it returns?`,
-      fuelAvailable - direct * fuelPerKm,
-      'Find the direct return distance, calculate battery use, then subtract from the remaining battery.'
+      `Two observers stand on the same straight, level line from a ${towerHeight} m tower. One is ${nearDistance} m from the tower and the other is ${farDistance} m away. By how many degrees is the nearer observer's angle of elevation greater than the farther observer's angle? Give your answer to 2 decimal places. You may use a calculator.`,
+      nearAngle - farAngle,
+      'Find both angles using inverse tangent, subtract them, then round the final difference to 2 decimal places.'
     );
   }
 
-  // 6. Choosing whether a diagonal item fits
-  const openingTriple = pick([[3, 4, 5], [5, 12, 13], [6, 8, 10]]);
-  const openingScale = pick([10, 20, 30]);
+  // 6. Simple trigonometric ratios and inverse trigonometry
+  if (type === 6) {
+    if (s === 'basic') {
+      const angle = pick(degreeAngles);
+      const hypotenuse = randInt(8, 24);
+      const opposite = twoDp(hypotenuse * Math.sin(toRadians(angle)));
 
-  if (s === 'basic') {
-    const diagonal = openingTriple[2] * openingScale;
+      return psQ(
+        'pythagorasTrig',
+        s,
+        `A support beam is ${hypotenuse} m long and makes an angle of ${angle}° with level ground. What vertical height does it reach? Give your answer to 2 decimal places. You may use a calculator.`,
+        opposite,
+        'Use sine because the vertical height is opposite the angle and the beam is the hypotenuse.'
+      );
+    }
+
+    if (s === 'multi') {
+      const opposite = randInt(4, 15);
+      const adjacent = randInt(6, 22);
+      const angle = twoDp(toDegrees(Math.atan(opposite / adjacent)));
+
+      return psQ(
+        'pythagorasTrig',
+        s,
+        `A roof rises ${opposite} m over a horizontal run of ${adjacent} m. What angle does the roof make with the horizontal? Give your answer to 2 decimal places. You may use a calculator.`,
+        angle,
+        'Use inverse tangent because the rise and horizontal run are known.'
+      );
+    }
+
+    const angleA = pick([20, 25, 30, 35]);
+    const angleB = angleA + pick([5, 10, 15]);
+    const run = randInt(8, 20);
+    const heightA = twoDp(run * Math.tan(toRadians(angleA)));
+    const heightB = twoDp(run * Math.tan(toRadians(angleB)));
 
     return psQ(
       'pythagorasTrig',
       s,
-      `A rectangular opening is ${openingTriple[0] * openingScale} cm wide and ${openingTriple[1] * openingScale} cm high. What is the longest straight pole that can fit exactly from one corner to the opposite corner, in centimetres?`,
-      diagonal,
-      'The longest corner-to-corner distance is the rectangle diagonal.'
+      `Two ramp designs have the same horizontal run of ${run} m. Design A rises at ${angleA}° and Design B rises at ${angleB}°. How many metres greater is the vertical rise of Design B than Design A? Give your answer to 2 decimal places. You may use a calculator.`,
+      twoDp(heightB - heightA),
+      'Use tangent to find each vertical rise, then compare the two designs.'
+    );
+  }
+
+  // 7. Practical measurement and design decisions
+  if (s === 'basic') {
+    const shadow = randInt(6, 20);
+    const angle = pick([25, 30, 35, 40, 45, 50, 55]);
+    const height = twoDp(shadow * Math.tan(toRadians(angle)));
+
+    return psQ(
+      'pythagorasTrig',
+      s,
+      `A flagpole casts a ${shadow} m shadow when the angle of elevation of the sun is ${angle}°. Estimate the height of the flagpole to 2 decimal places. You may use a calculator.`,
+      height,
+      'Use tangent with the shadow as the adjacent side and the flagpole height as the opposite side.'
     );
   }
 
   if (s === 'multi') {
-    const diagonal = openingTriple[2] * openingScale;
-    const pole = diagonal + pick([10, 20, 30, 40]);
+    const distance = randInt(10, 35);
+    const angle = pick([25, 30, 35, 40, 45, 50]);
+    const instrumentHeight = pick([1.2, 1.4, 1.5, 1.6]);
+    const buildingHeight = twoDp(distance * Math.tan(toRadians(angle)) + instrumentHeight);
+    const clearance = twoDp(buildingHeight + pick([1.5, 2, 2.5, 3]));
 
     return psQ(
       'pythagorasTrig',
       s,
-      `A rectangular opening is ${openingTriple[0] * openingScale} cm by ${openingTriple[1] * openingScale} cm. A straight pole is ${pole} cm long. By how many centimetres is the pole longer than the opening's diagonal?`,
-      pole - diagonal,
-      'Find the opening diagonal, then compare it with the pole length.'
+      `A survey instrument ${instrumentHeight} m above the ground is placed ${distance} m from a building. The angle of elevation to the roof is ${angle}°. A crane must clear the roof by ${twoDp(clearance - buildingHeight)} m. What minimum crane height is required, to 2 decimal places? You may use a calculator.`,
+      clearance,
+      'Use tangent to find the height above the instrument, add the instrument height, then add the required clearance.'
     );
   }
 
-  const diagonal = openingTriple[2] * openingScale;
-  const poleA = diagonal - pick([10, 20]);
-  const poleB = diagonal + pick([10, 20, 30, 40]);
+  const run = randInt(8, 16);
+  const designAAngle = pick([6, 7, 8, 9, 10]);
+  const designBAngle = designAAngle + pick([2, 3, 4]);
+  const maximumAngle = pick([8, 9, 10, 11, 12]);
+  const riseA = twoDp(run * Math.tan(toRadians(designAAngle)));
+  const riseB = twoDp(run * Math.tan(toRadians(designBAngle)));
+  const minimumRise = twoDp((riseA + riseB) / 2);
+  const validA = designAAngle <= maximumAngle && riseA >= minimumRise;
+  const validB = designBAngle <= maximumAngle && riseB >= minimumRise;
+  const validCount = Number(validA) + Number(validB);
 
   return psQ(
     'pythagorasTrig',
     s,
-    `A rectangular opening is ${openingTriple[0] * openingScale} cm by ${openingTriple[1] * openingScale} cm. Pole A is ${poleA} cm long and Pole B is ${poleB} cm long. How many centimetres longer than the maximum fitting length is Pole B?`,
-    poleB - diagonal,
-    'Calculate the diagonal, which is the maximum fitting length, then compare Pole B with it.'
+    `Two access-ramp designs each have a horizontal run of ${run} m. Design A has an angle of ${designAAngle}° and Design B has an angle of ${designBAngle}°. A design is acceptable only if its angle is no more than ${maximumAngle}° and its vertical rise is at least ${minimumRise} m. How many designs are acceptable? You may use a calculator.`,
+    validCount,
+    'Use tangent to calculate each rise, then apply both the maximum-angle and minimum-rise conditions.'
   );
 }
 

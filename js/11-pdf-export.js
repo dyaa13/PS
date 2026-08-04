@@ -58,16 +58,10 @@ function generateUniqueExportQuestions(count) {
 }
 
 function exportQuestionHtml(question, index) {
-  const structure = question.structureLabel
-    || PROBLEM_STRUCTURE_LABELS[question.structure]
-    || '';
-  const skill = currentLabels()[question.skill] || question.skill;
-
   return `
     <article class="question-card">
       <div class="question-heading">
         <span class="question-number">${index + 1}</span>
-        <span class="question-tags">${escapeHtml(skill)}${structure ? ` · ${escapeHtml(structure)}` : ''}</span>
       </div>
       <div class="question-text">${formatMathHtml(question.text)}</div>
       <div class="working-space"></div>
@@ -126,7 +120,6 @@ function buildExportDocument(questions) {
   .question-card{break-inside:avoid;margin:0 0 7mm;padding:4mm;border:1px solid #b8c5d3;border-radius:8px;background:#fff}
   .question-heading{display:flex;align-items:center;gap:7px;margin-bottom:6px}
   .question-number{display:grid;place-items:center;min-width:24px;height:24px;border-radius:50%;color:#fff;background:#173b64;font-size:12px;font-weight:900}
-  .question-tags{color:#64748b;font-size:8.5px;font-weight:800;text-transform:uppercase}
   .question-text{font-size:10.5px;font-weight:700;line-height:1.45}
   .question-text sup{font-size:.65em;line-height:0;vertical-align:super}
   .working-space{height:15mm;margin-top:5px;border-radius:5px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 5mm,#dbe3ec 5mm,#dbe3ec 5.2mm)}
