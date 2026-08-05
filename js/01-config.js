@@ -40,6 +40,8 @@ const YEAR_CONFIGS = {
       calendarDayWeek: 'Calendar and Day-of-Week Problems',
       orderingConstraints: 'Ordering and Constraint Problems',
       transferExchange: 'Transfer and Exchange Problems',
+      divisibilityDigitLogic: 'Divisibility and Digit Logic',
+      gameFairness: 'Game Fairness',
       equations: 'Simple Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
       angleReasoning: 'Angle Reasoning',
@@ -53,7 +55,7 @@ const YEAR_CONFIGS = {
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
       'percentages', 'ratio', 'proportion', 'speedDistanceTime',
-      'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'equations', 'geometryMeasurement',
+      'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'divisibilityDigitLogic', 'gameFairness', 'equations', 'geometryMeasurement',
       'angleReasoning', 'coordinatesLines', 'sequences', 'statistics',
       'probability', 'logicConstraints'
     ],
@@ -85,6 +87,8 @@ const YEAR_CONFIGS = {
       calendarDayWeek: 'Calendar and Day-of-Week Problems',
       orderingConstraints: 'Ordering and Constraint Problems',
       transferExchange: 'Transfer and Exchange Problems',
+      divisibilityDigitLogic: 'Divisibility and Digit Logic',
+      gameFairness: 'Game Fairness',
       equations: 'Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
       angleReasoning: 'Angle Reasoning',
@@ -100,7 +104,7 @@ const YEAR_CONFIGS = {
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
       'percentages', 'ratio', 'proportion', 'speedDistanceTime',
-      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'equations',
+      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'divisibilityDigitLogic', 'gameFairness', 'equations',
       'geometryMeasurement', 'angleReasoning', 'pythagorasTrig',
       'coordinatesLines', 'sequences', 'statistics', 'probability',
       'logicConstraints', 'modelling'
@@ -133,6 +137,8 @@ const YEAR_CONFIGS = {
       calendarDayWeek: 'Calendar and Day-of-Week Problems',
       orderingConstraints: 'Ordering and Constraint Problems',
       transferExchange: 'Transfer and Exchange Problems',
+      divisibilityDigitLogic: 'Divisibility and Digit Logic',
+      gameFairness: 'Game Fairness',
       equations: 'Equation Problems',
       complexLinearEquations: 'Complex Linear Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
@@ -150,7 +156,7 @@ const YEAR_CONFIGS = {
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
       'percentages', 'ratio', 'proportion', 'speedDistanceTime',
-      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'equations',
+      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'divisibilityDigitLogic', 'gameFairness', 'equations',
       'complexLinearEquations', 'geometryMeasurement', 'angleReasoning', 'pythagorasTrig',
       'coordinatesLines', 'sequences', 'statistics', 'probability',
       'logicConstraints', 'optimisation', 'modelling'

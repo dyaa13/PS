@@ -18,6 +18,8 @@ const PROBLEM_BANKS = {
   calendarDayWeek: psGenCalendarDayWeek,
   orderingConstraints: psGenOrderingConstraints,
   transferExchange: psGenTransferExchange,
+  divisibilityDigitLogic: psGenDivisibilityDigitLogic,
+  gameFairness: psGenGameFairness,
   equations: psGenEquations,
   complexLinearEquations: psGenComplexLinearEquations,
   geometryMeasurement: psGenGeometryMeasurement,
