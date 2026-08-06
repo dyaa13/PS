@@ -42,6 +42,10 @@ const YEAR_CONFIGS = {
       transferExchange: 'Transfer and Exchange Problems',
       divisibilityDigitLogic: 'Divisibility and Digit Logic',
       gameFairness: 'Game Fairness',
+      minimumMaximum: 'Minimum and Maximum Problems',
+      countingCodes: 'Counting Principles and Codes',
+      systematicCounting: 'Systematic Counting',
+      informationSufficiency: 'Information Sufficiency',
       equations: 'Simple Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
       angleReasoning: 'Angle Reasoning',
@@ -55,7 +59,7 @@ const YEAR_CONFIGS = {
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
       'percentages', 'ratio', 'proportion', 'speedDistanceTime',
-      'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'divisibilityDigitLogic', 'gameFairness', 'equations', 'geometryMeasurement',
+      'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'divisibilityDigitLogic', 'gameFairness', 'minimumMaximum', 'countingCodes', 'systematicCounting', 'informationSufficiency', 'equations', 'geometryMeasurement',
       'angleReasoning', 'coordinatesLines', 'sequences', 'statistics',
       'probability', 'logicConstraints'
     ],
@@ -89,6 +93,10 @@ const YEAR_CONFIGS = {
       transferExchange: 'Transfer and Exchange Problems',
       divisibilityDigitLogic: 'Divisibility and Digit Logic',
       gameFairness: 'Game Fairness',
+      minimumMaximum: 'Minimum and Maximum Problems',
+      countingCodes: 'Counting Principles and Codes',
+      systematicCounting: 'Systematic Counting',
+      informationSufficiency: 'Information Sufficiency',
       equations: 'Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
       angleReasoning: 'Angle Reasoning',
@@ -104,7 +112,7 @@ const YEAR_CONFIGS = {
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
       'percentages', 'ratio', 'proportion', 'speedDistanceTime',
-      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'divisibilityDigitLogic', 'gameFairness', 'equations',
+      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'divisibilityDigitLogic', 'gameFairness', 'minimumMaximum', 'countingCodes', 'systematicCounting', 'informationSufficiency', 'equations',
       'geometryMeasurement', 'angleReasoning', 'pythagorasTrig',
       'coordinatesLines', 'sequences', 'statistics', 'probability',
       'logicConstraints', 'modelling'
@@ -139,6 +147,10 @@ const YEAR_CONFIGS = {
       transferExchange: 'Transfer and Exchange Problems',
       divisibilityDigitLogic: 'Divisibility and Digit Logic',
       gameFairness: 'Game Fairness',
+      minimumMaximum: 'Minimum and Maximum Problems',
+      countingCodes: 'Counting Principles and Codes',
+      systematicCounting: 'Systematic Counting',
+      informationSufficiency: 'Information Sufficiency',
       equations: 'Equation Problems',
       complexLinearEquations: 'Complex Linear Equation Problems',
       geometryMeasurement: 'Geometry and Measurement',
@@ -156,7 +168,7 @@ const YEAR_CONFIGS = {
     skills: [
       'arithmetic', 'comparison', 'fractions', 'decimalsMoney',
       'percentages', 'ratio', 'proportion', 'speedDistanceTime',
-      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'divisibilityDigitLogic', 'gameFairness', 'equations',
+      'workRate', 'age', 'numberProblems', 'calendarDayWeek', 'orderingConstraints', 'transferExchange', 'divisibilityDigitLogic', 'gameFairness', 'minimumMaximum', 'countingCodes', 'systematicCounting', 'informationSufficiency', 'equations',
       'complexLinearEquations', 'geometryMeasurement', 'angleReasoning', 'pythagorasTrig',
       'coordinatesLines', 'sequences', 'statistics', 'probability',
       'logicConstraints', 'optimisation', 'modelling'

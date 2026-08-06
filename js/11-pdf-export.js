@@ -174,16 +174,84 @@ function buildExportDocument(questions) {
       <span>Together We Learn, Together We Grow 🚀</span>
     </footer>
   </main>
-<script>
-  window.addEventListener('load', () => {
-    setTimeout(() => window.print(), 350);
-  });
-<\/script>
 </body>
 </html>`;
 }
 
-function exportSelectedQuestionsToPdf() {
+function removePdfPrintFrame(frame) {
+  if (frame && frame.parentNode) {
+    frame.parentNode.removeChild(frame);
+  }
+}
+
+function printExportDocument(documentHtml) {
+  return new Promise((resolve, reject) => {
+    const printFrame = document.createElement('iframe');
+    let settled = false;
+    let fallbackTimer = null;
+
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+      removePdfPrintFrame(printFrame);
+      window.focus();
+      resolve();
+    };
+
+    const fail = error => {
+      if (settled) return;
+      settled = true;
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+      removePdfPrintFrame(printFrame);
+      reject(error);
+    };
+
+    // Keep the iframe rendered but far outside the visible page. Using
+    // display:none can produce a blank printout in some browsers.
+    printFrame.setAttribute('title', 'DYAA printable worksheet');
+    printFrame.style.position = 'fixed';
+    printFrame.style.left = '-10000px';
+    printFrame.style.top = '0';
+    printFrame.style.width = '210mm';
+    printFrame.style.height = '297mm';
+    printFrame.style.border = '0';
+    printFrame.style.opacity = '0';
+    printFrame.style.pointerEvents = 'none';
+
+    printFrame.addEventListener('load', () => {
+      try {
+        const printWindow = printFrame.contentWindow;
+
+        if (!printWindow) {
+          throw new Error('The printable worksheet could not be opened.');
+        }
+
+        printWindow.addEventListener('afterprint', finish, { once: true });
+
+        // Edge normally fires afterprint. The fallback only removes the
+        // temporary iframe if the browser omits that event.
+        fallbackTimer = setTimeout(finish, 120000);
+
+        setTimeout(() => {
+          try {
+            printWindow.focus();
+            printWindow.print();
+          } catch (error) {
+            fail(error);
+          }
+        }, 250);
+      } catch (error) {
+        fail(error);
+      }
+    }, { once: true });
+
+    document.body.appendChild(printFrame);
+    printFrame.srcdoc = documentHtml;
+  });
+}
+
+async function exportSelectedQuestionsToPdf() {
   if (state.running) return;
 
   syncSelectedSkillsFromUI();
@@ -191,13 +259,6 @@ function exportSelectedQuestionsToPdf() {
 
   if (getActiveSkills().length === 0) {
     alert('Select at least one problem type before exporting.');
-    return;
-  }
-
-  const printWindow = window.open('', '_blank');
-
-  if (!printWindow) {
-    alert('The PDF window was blocked. Allow pop-ups for this page, then try again.');
     return;
   }
 
@@ -209,14 +270,20 @@ function exportSelectedQuestionsToPdf() {
     const questions = generateUniqueExportQuestions(PDF_EXPORT_QUESTION_COUNT);
     const documentHtml = buildExportDocument(questions);
 
-    printWindow.document.open();
-    printWindow.document.write(documentHtml);
-    printWindow.document.close();
+    exportQuestionsBtn.textContent = 'Opening Print Dialog…';
+    await printExportDocument(documentHtml);
   } catch (error) {
-    printWindow.close();
     alert(error.message || 'Unable to generate the 50-question PDF.');
   } finally {
-    exportQuestionsBtn.disabled = false;
     exportQuestionsBtn.textContent = originalText;
+
+    // Exporting is only allowed when a practice session is not running.
+    // Re-apply the normal setup state instead of restoring a possibly stale
+    // disabled value left by a browser print/popup cycle.
+    if (!state.running) {
+      setControlsForGame(false);
+      updateSkillSelectionUI();
+      yearSelect.focus();
+    }
   }
 }
